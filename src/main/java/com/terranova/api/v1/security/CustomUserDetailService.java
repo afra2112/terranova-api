@@ -2,7 +2,7 @@ package com.terranova.api.v1.security;
 
 import com.terranova.api.v1.user.entity.User;
 import com.terranova.api.v1.user.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -10,11 +10,11 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
+@RequiredArgsConstructor
 @Service
 public class CustomUserDetailService implements UserDetailsService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
 
     @Override
@@ -30,7 +30,7 @@ public class CustomUserDetailService implements UserDetailsService {
         List<SimpleGrantedAuthority> authorities =
                 user.getRoles().stream()
                         .map(role -> new SimpleGrantedAuthority(
-                                "ROLE_" + role.getRolName()
+                                "ROLE_" + role.getRoleName()
                         ))
                         .toList();
 

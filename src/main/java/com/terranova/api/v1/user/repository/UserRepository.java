@@ -18,9 +18,5 @@ public interface UserRepository extends JpaRepository<User, UUID> {
 
     boolean existsByEmail(String email);
 
-    boolean existsByIdentification(String cedula);
-
-    Optional<User> findByProviderAndProviderId(String provider, String providerId);
-
-    Optional<User> findByResetToken(String resetToken);
+    boolean existsByIdentification(String identification);
 }

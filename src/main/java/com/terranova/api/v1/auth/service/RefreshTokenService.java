@@ -20,7 +20,7 @@ public class RefreshTokenService {
         RefreshToken token = new RefreshToken();
         token.setToken(UUID.randomUUID().toString());
         token.setUser(user);
-        token.setExpiresAt(LocalDateTime.now().plusDays(7));
+        token.setExpiresAt(LocalDateTime.now().plusDays(30));
 
         refreshTokenRepository.save(token);
 

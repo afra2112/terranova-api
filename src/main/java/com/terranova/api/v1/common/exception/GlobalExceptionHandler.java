@@ -1,6 +1,8 @@
 package com.terranova.api.v1.common.exception;
 
+import com.terranova.api.v1.user.exception.InvalidBirthDateException;
 import com.terranova.api.v1.auth.exception.InvalidJwtTokenException;
+import com.terranova.api.v1.user.exception.UserAlreadyExistsByEmailOrIdentificationException;
 import com.terranova.api.v1.common.enums.ErrorCodeEnum;
 import com.terranova.api.v1.user.exception.UserNotFoundException;
 import lombok.extern.slf4j.Slf4j;
@@ -9,6 +11,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Slf4j
 @RestControllerAdvice
@@ -29,10 +34,16 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ApiError> handleValidationSpring(MethodArgumentNotValidException ex){
+    public ResponseEntity<Map<String, String>> handleValidationSpring(MethodArgumentNotValidException ex){
+        Map<String, String> errors = new HashMap<>();
+
+        ex.getBindingResult().getFieldErrors().forEach(
+                error -> errors.put(error.getField(), error.getDefaultMessage())
+        );
+
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
-                .body(new ApiError(ErrorCodeEnum.VALIDATION_ERROR, ex.getMessage()));
+                .body(errors);
     }
 
     @ExceptionHandler(Exception.class)
@@ -40,6 +51,20 @@ public class GlobalExceptionHandler {
         log.error("Unexpected error: ", ex);
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(new ApiError(ErrorCodeEnum.INTERNAL_ERROR, ex.getMessage()));
+                .body(new ApiError(ErrorCodeEnum.INTERNAL_ERROR, ex.getClass().getSimpleName() + " : " + ex.getMessage()));
+    }
+
+    @ExceptionHandler(UserAlreadyExistsByEmailOrIdentificationException.class)
+    public ResponseEntity<ApiError> handleUserExistsByEmailOrIdentification(UserAlreadyExistsByEmailOrIdentificationException ex){
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(new ApiError(ErrorCodeEnum.USER_ALREADY_EXISTS, ex.getMessage()));
+    }
+
+    @ExceptionHandler(InvalidBirthDateException.class)
+    public  ResponseEntity<ApiError> handleMinimumAgeException(InvalidBirthDateException ex){
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(new ApiError(ErrorCodeEnum.INVALID_AGE, ex.getMessage()));
     }
 }
