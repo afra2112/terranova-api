@@ -12,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Component
@@ -26,8 +27,14 @@ public class DevDataSeeder implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         if (roleRepository.findByRoleName(RoleEnum.ROLE_BUYER).isEmpty() && roleRepository.findByRoleName(RoleEnum.ROLE_SELLER).isEmpty()){
-            List<Role> roles = List.of(new Role(RoleEnum.ROLE_SELLER), new Role(RoleEnum.ROLE_BUYER));
-            roleRepository.saveAll(roles);
+            Role seller = new Role();
+            seller.setRoleName(RoleEnum.ROLE_SELLER);
+
+            Role buyer = new Role();
+            buyer.setRoleName(RoleEnum.ROLE_BUYER);
+
+            roleRepository.save(buyer);
+            roleRepository.save(seller);
         }
 
         if(!userRepository.existsByEmail("admin@gmail.com")){
@@ -40,6 +47,7 @@ public class DevDataSeeder implements CommandLineRunner {
             admin.setIdentification("1094247745");
             admin.setPhoneNumber("3102162732");
             admin.setBirthday(LocalDate.of(2007, 6, 5));
+            admin.setRegisterDate(LocalDateTime.now());
             userRepository.save(admin);
         }
     }

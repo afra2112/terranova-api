@@ -37,8 +37,10 @@ public class WebSecurityConfig {
                 .exceptionHandling(ex ->
                         ex.authenticationEntryPoint(authenticationEntryPoint)
                 )
-                .authorizeHttpRequests(a ->
-                        a.requestMatchers("/api/v1/auth/**").permitAll().anyRequest().authenticated()
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/api/v1/seller/**").hasRole("SELLER")
+                        .requestMatchers("/api/v1/buyer/**").hasRole("BUYER")
+                        .requestMatchers("/api/v1/auth/**").permitAll().anyRequest().authenticated()
                 );
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();

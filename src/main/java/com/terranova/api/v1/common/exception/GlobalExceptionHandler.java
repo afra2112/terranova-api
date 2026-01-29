@@ -8,6 +8,9 @@ import com.terranova.api.v1.user.exception.UserNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -66,5 +69,19 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(new ApiError(ErrorCodeEnum.INVALID_AGE, ex.getMessage()));
+    }
+
+    @ExceptionHandler(InternalAuthenticationServiceException.class)
+    public  ResponseEntity<ApiError> handleUserNotFoundSpringException(InternalAuthenticationServiceException ex){
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(new ApiError(ErrorCodeEnum.USER_NOT_FOUND, ex.getMessage()));
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public  ResponseEntity<ApiError> handleBadCredentialsException(BadCredentialsException ex){
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(new ApiError(ErrorCodeEnum.INCORRECT_PASSWORD, "Ups... Incorrect password, please try again."));
     }
 }

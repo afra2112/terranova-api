@@ -1,6 +1,7 @@
 package com.terranova.api.v1.security;
 
 import com.terranova.api.v1.user.entity.User;
+import com.terranova.api.v1.user.exception.UserNotFoundException;
 import com.terranova.api.v1.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -22,22 +23,11 @@ public class CustomUserDetailService implements UserDetailsService {
 
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() ->
-                        new UsernameNotFoundException(
+                        new UserNotFoundException(
                                 "User not found with the email: " + email
                         )
                 );
 
-        List<SimpleGrantedAuthority> authorities =
-                user.getRoles().stream()
-                        .map(role -> new SimpleGrantedAuthority(
-                                "ROLE_" + role.getRoleName()
-                        ))
-                        .toList();
-
-        return new org.springframework.security.core.userdetails.User(
-                user.getEmail(),
-                user.getPassword(),
-                authorities
-        );
+        return new CustomUserDetails(user);
     }
 }

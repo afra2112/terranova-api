@@ -2,6 +2,7 @@ package com.terranova.api.v1.auth.service;
 
 import com.terranova.api.v1.auth.dto.*;
 import com.terranova.api.v1.auth.entity.RefreshToken;
+import com.terranova.api.v1.security.CustomUserDetails;
 import com.terranova.api.v1.user.exception.InvalidBirthDateException;
 import com.terranova.api.v1.user.exception.UserAlreadyExistsByEmailOrIdentificationException;
 import com.terranova.api.v1.auth.security.JwtUtil;
@@ -12,6 +13,7 @@ import com.terranova.api.v1.user.entity.User;
 import com.terranova.api.v1.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -43,8 +45,14 @@ public class AuthServiceImplement implements AuthService {
                 )
         );
 
-        User user = (User) authentication.getPrincipal();
-        assert user != null;
+        Object principal = authentication.getPrincipal();
+
+        if (!(principal instanceof CustomUserDetails userDetails)) {
+            throw new AuthenticationServiceException("Expected CustomUserDetails but got: " + principal.getClass());
+        }
+
+        User user = userDetails.getUser();
+
         List<RoleEnum> roles = user.getRoles().stream().map(Role::getRoleName).toList();
 
         String accessToken = jwtUtil.generateToken(user.getIdentification(), roles);
