@@ -8,7 +8,7 @@ import lombok.*;
 import java.util.List;
 
 @Entity
-@Table(name = "role")
+@Table(name = "roles")
 @Setter
 @Getter
 @AllArgsConstructor
@@ -17,11 +17,14 @@ public class Role {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long RoleId;
+    private Long roleId;
 
     @Enumerated(EnumType.STRING)
-    private RoleEnum RolName;
+    private RoleEnum roleName;
 
     @ManyToMany(mappedBy = "roles")
-    private List<User> Users;
+    private List<User> users;
+
+    public Role(RoleEnum roleEnum) {
+    }
 }

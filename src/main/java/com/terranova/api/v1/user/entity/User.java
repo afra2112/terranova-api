@@ -47,7 +47,7 @@ public class User {
     @Column(nullable = false)
     private LocalDate birthday;
 
-    private LocalDate registerDate;
+    private LocalDateTime registerDate;
 
     private String profilePicture;
 

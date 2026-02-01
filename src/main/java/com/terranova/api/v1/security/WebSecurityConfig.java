@@ -1,7 +1,7 @@
 package com.terranova.api.v1.security;
 
-import com.terranova.api.v1.auth.security.AuthEntryPointJwt;
 import com.terranova.api.v1.auth.security.AuthTokenFilter;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,8 +21,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class WebSecurityConfig {
 
-    private final CustomUserDetailService userDetailsService;
-    private final AuthEntryPointJwt authenticationEntryPoint;
     private final AuthTokenFilter jwtAuthenticationFilter;
 
 
@@ -30,16 +28,36 @@ public class WebSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http){
         http
                 .csrf(AbstractHttpConfigurer::disable)
+                .exceptionHandling(ex -> ex
+                        .authenticationEntryPoint((request, response, authException) -> {
+                            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                            response.setContentType("application/json");
+                            response.getWriter().write("""
+                                    {
+                                        "message": "Authentication required"
+                                    }
+                                    """);
+                        })
+                        .accessDeniedHandler((request, response, accessDeniedException) -> {
+                            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                            response.setContentType("application/json");
+                            response.getWriter().write("""
+                                    {
+                                        "message": "Forbidden"
+                                    }
+                                    """);
+                        })
+                )
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(
                                 SessionCreationPolicy.STATELESS
                         )
                 )
-                .exceptionHandling(ex ->
-                        ex.authenticationEntryPoint(authenticationEntryPoint)
-                )
-                .authorizeHttpRequests(a ->
-                        a.requestMatchers("/api/v1/auth/**").permitAll().anyRequest().authenticated()
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/api/v1/seller/**").hasAuthority("ROLE_SELLER")
+                        .requestMatchers("/api/v1/buyer/**").hasAuthority("ROLE_BUYER")
+                        .requestMatchers("/api/v1/auth/**").permitAll()
+                        .anyRequest().authenticated()
                 );
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
