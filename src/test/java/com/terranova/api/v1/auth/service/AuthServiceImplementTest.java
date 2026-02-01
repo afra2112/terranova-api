@@ -5,6 +5,7 @@ import com.terranova.api.v1.auth.dto.AuthResponse;
 import com.terranova.api.v1.auth.dto.RefreshTokenRequest;
 import com.terranova.api.v1.auth.dto.RegisterRequest;
 import com.terranova.api.v1.auth.entity.RefreshToken;
+import com.terranova.api.v1.auth.exception.NullRefreshTokenException;
 import com.terranova.api.v1.auth.security.JwtUtil;
 import com.terranova.api.v1.role.entity.Role;
 import com.terranova.api.v1.role.enums.RoleEnum;
@@ -210,6 +211,24 @@ class  AuthServiceImplementTest {
             verify(jwtUtil).generateToken(eq("12345"), anyList());
 
             verify(refreshTokenService).rotate(mockRefreshToken);
+        }
+
+        @Test
+        @DisplayName("Should throw Exception if refresh token is null")
+        void shouldTrowNullRefreshTokenException(){
+
+            NullRefreshTokenException exception = assertThrows(NullRefreshTokenException.class, () -> authServiceImplement.logout(null));
+            assertEquals("The given refresh token is null.", exception.getMessage());
+        }
+
+        @Test
+        @DisplayName("Should delete refreshToken successfuly")
+        void shouldDeleteRefreshTokenSuccessfully(){
+            String token = "token1234";
+
+            authServiceImplement.logout(token);
+
+            verify(refreshTokenService, times(1)).invalidate(token);
         }
     }
 }

@@ -1,3 +1,10 @@
 package com.terranova.api.v1.auth.dto;
 
-public record RefreshTokenRequest(String refreshToken) { }
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
+public record RefreshTokenRequest(
+        @NotNull
+        @NotBlank
+        String refreshToken
+) { }

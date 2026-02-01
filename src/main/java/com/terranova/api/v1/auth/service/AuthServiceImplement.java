@@ -2,6 +2,7 @@ package com.terranova.api.v1.auth.service;
 
 import com.terranova.api.v1.auth.dto.*;
 import com.terranova.api.v1.auth.entity.RefreshToken;
+import com.terranova.api.v1.auth.exception.NullRefreshTokenException;
 import com.terranova.api.v1.common.exception.EntityNotFoundException;
 import com.terranova.api.v1.security.CustomUserDetails;
 import com.terranova.api.v1.user.exception.InvalidBirthDateException;
@@ -123,6 +124,9 @@ public class AuthServiceImplement implements AuthService {
 
     @Override
     public void logout(String refreshToken) {
+        if (refreshToken == null){
+            throw new NullRefreshTokenException("The given refresh token is null.");
+        }
         refreshTokenService.invalidate(refreshToken);
     }
 }

@@ -1,11 +1,9 @@
 package com.terranova.api.v1.auth.security;
 
 import com.terranova.api.v1.auth.exception.InvalidJwtTokenException;
+import com.terranova.api.v1.auth.exception.TokenExpiredException;
 import com.terranova.api.v1.role.enums.RoleEnum;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
@@ -56,19 +54,19 @@ public class JwtUtil {
 
     public String getIdentificationFromToken(String token){
         return Jwts.parserBuilder().setSigningKey(key).build()
-                .parseClaimsJwt(token)
+                .parseClaimsJws(token)
                 .getBody()
                 .getSubject();
     }
 
     public void validateJwtToken(String token){
         try{
-            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJwt(token);
-        }catch (InvalidJwtTokenException e){
-            throw new InvalidJwtTokenException("JWT Token expired");
+            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+        }catch (ExpiredJwtException e){
+            throw new TokenExpiredException("Token expired");
 
         }catch (JwtException e){
-            throw new JwtException("Invalid JWT Token");
+            throw new InvalidJwtTokenException("Invalid Token");
         }
     }
 }

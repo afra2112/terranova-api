@@ -1,10 +1,13 @@
 package com.terranova.api.v1.common.exception;
 
+import com.terranova.api.v1.auth.exception.NullRefreshTokenException;
+import com.terranova.api.v1.auth.exception.TokenExpiredException;
 import com.terranova.api.v1.user.exception.InvalidBirthDateException;
 import com.terranova.api.v1.auth.exception.InvalidJwtTokenException;
 import com.terranova.api.v1.user.exception.UserAlreadyExistsByEmailOrIdentificationException;
 import com.terranova.api.v1.common.enums.ErrorCodeEnum;
 import lombok.extern.slf4j.Slf4j;
+import org.antlr.v4.runtime.Token;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -77,7 +80,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(InvalidBirthDateException.class)
-    public  ResponseEntity<ApiError> handleMinimumAgeException(InvalidBirthDateException ex){
+    public ResponseEntity<ApiError> handleMinimumAgeException(InvalidBirthDateException ex){
         return buildError(
                 HttpStatus.BAD_REQUEST,
                 ErrorCodeEnum.INVALID_AGE,
@@ -86,7 +89,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(InternalAuthenticationServiceException.class)
-    public  ResponseEntity<ApiError> handleUserNotFoundSpringException(InternalAuthenticationServiceException ex){
+    public ResponseEntity<ApiError> handleUserNotFoundSpringException(InternalAuthenticationServiceException ex){
         return buildError(
                 HttpStatus.NOT_FOUND,
                 ErrorCodeEnum.USER_NOT_FOUND,
@@ -95,11 +98,29 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(BadCredentialsException.class)
-    public  ResponseEntity<ApiError> handleBadCredentialsException(BadCredentialsException ex){
+    public ResponseEntity<ApiError> handleBadCredentialsException(BadCredentialsException ex){
         return buildError(
                 HttpStatus.UNAUTHORIZED,
                 ErrorCodeEnum.INCORRECT_PASSWORD,
                 "Ups... Incorrect password, please try again."
+        );
+    }
+
+    @ExceptionHandler(NullRefreshTokenException.class)
+    public ResponseEntity<ApiError> handleNullRefreshTokenException(NullRefreshTokenException ex){
+        return buildError(
+                HttpStatus.BAD_REQUEST,
+                ErrorCodeEnum.NULL_REFRESH_TOKEN,
+                ex.getMessage()
+        );
+    }
+
+    @ExceptionHandler(TokenExpiredException.class)
+    public ResponseEntity<ApiError> handleTokenExpiredException(TokenExpiredException ex){
+        return buildError(
+                HttpStatus.UNAUTHORIZED,
+                ErrorCodeEnum.TOKEN_EXPIRED,
+                ex.getMessage()
         );
     }
 }

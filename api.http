@@ -20,11 +20,12 @@ Content-Type: application/json
   "password": "andres1234"
 }
 
-> {%
-    client.global.set("auth_token", response.body.accessToken);
-%}
-
 ###
 GET http://localhost:8080/api/v1/seller/
-Authorization: Bearer {{auth_token}}
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJyb2xlcyI6WyJST0xFX0JVWUVSIl0sInN1YiI6IjEyMzQ1Njc4OTAiLCJpYXQiOjE3Njk5NzY4ODYsImV4cCI6MTc2OTk3NjkxNn0.ZXHPcDVSZEX0tH_H-gxAv3Q4qleNUzfBVPS9_gW7u834QREQxiFgCVvooQNgMxX-65c2otQRf1ft5eutNRmj7w
+Content-Type: application/json
+
+###
+GET http://localhost:8080/api/v1/buyer/
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJyb2xlcyI6WyJST0xFX0JVWUVSIl0sInN1YiI6IjEyMzQ1Njc4OTAiLCJpYXQiOjE3Njk5NzY4ODYsImV4cCI6MTc2OTk3NjkxNn0.ZXHPcDVSZEX0tH_H-gxAv3Q4qleNUzfBVPS9_gW7u834QREQxiFgCVvooQNgMxX-65c2otQRf1ft5eutNRmj7w
 Content-Type: application/json

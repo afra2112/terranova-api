@@ -1,6 +1,8 @@
 package com.terranova.api.v1.auth.security;
 
 
+import com.terranova.api.v1.auth.exception.InvalidJwtTokenException;
+import com.terranova.api.v1.auth.exception.TokenExpiredException;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -27,10 +29,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        System.out.println("DEBUG: Entrando al filtro");
         Optional<String> tokenOptional = extractBearerToken(request);
-
-        System.out.println("EL TOKEN ESTA PRESENTE O NO: " + tokenOptional.isPresent());
 
         if (tokenOptional.isEmpty()){
             filterChain.doFilter(request, response);
@@ -60,12 +59,18 @@ public class AuthTokenFilter extends OncePerRequestFilter {
             );
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
-        } catch (AuthenticationException ex) {
-            SecurityContextHolder.clearContext();
-            throw ex;
-        }
 
-        filterChain.doFilter(request, response);
+            filterChain.doFilter(request, response);
+        } catch (TokenExpiredException | InvalidJwtTokenException ex) {
+            SecurityContextHolder.clearContext();
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType("application/json");
+            response.getWriter().write("""
+                    {
+                        "message": "%s"
+                    }
+                    """.formatted(ex.getMessage()));
+        }
     }
 
     private Optional<String> extractBearerToken(HttpServletRequest request) {
