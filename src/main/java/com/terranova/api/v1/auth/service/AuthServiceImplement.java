@@ -2,6 +2,7 @@ package com.terranova.api.v1.auth.service;
 
 import com.terranova.api.v1.auth.dto.*;
 import com.terranova.api.v1.auth.entity.RefreshToken;
+import com.terranova.api.v1.common.exception.EntityNotFoundException;
 import com.terranova.api.v1.security.CustomUserDetails;
 import com.terranova.api.v1.user.exception.InvalidBirthDateException;
 import com.terranova.api.v1.user.exception.UserAlreadyExistsByEmailOrIdentificationException;
@@ -64,15 +65,14 @@ public class AuthServiceImplement implements AuthService {
     @Override
     @Transactional
     public AuthResponse register(RegisterRequest request) {
-        if (userRepository.existsByEmail(request.email()) || userRepository.existsByIdentification(request.identification())){
+        if (userRepository.existsByEmailOrIdentification(request.email(), request.identification())){
             throw new UserAlreadyExistsByEmailOrIdentificationException("You already have an account with that email or identification, please sign in.");
         }
 
-        User newUser = buildNewUser(request);
-        userRepository.save(newUser);
+        User newUser = userRepository.save(buildNewUser(request));
 
         List<RoleEnum> rolesEnum = newUser.getRoles().stream()
-                .map(role -> RoleEnum.valueOf(role.getRoleName().toString())).toList();
+                .map(role -> RoleEnum.ROLE_BUYER).toList();
         String accesToken = jwtUtil.generateToken(newUser.getIdentification(), rolesEnum);
         String refreshToken = refreshTokenService.create(newUser);
 
@@ -93,7 +93,7 @@ public class AuthServiceImplement implements AuthService {
         user.setPassword(passwordEncoder.encode(request.password()));
         user.setRegisterDate(LocalDateTime.now());
         Role role = roleRepository.findByRoleName(RoleEnum.ROLE_BUYER)
-                .orElseThrow(() -> new RuntimeException("Default role not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Role", "?"));
         user.setRoles(List.of(role));
 
         return user;

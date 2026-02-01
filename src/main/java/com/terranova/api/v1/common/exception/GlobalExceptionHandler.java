@@ -4,13 +4,11 @@ import com.terranova.api.v1.user.exception.InvalidBirthDateException;
 import com.terranova.api.v1.auth.exception.InvalidJwtTokenException;
 import com.terranova.api.v1.user.exception.UserAlreadyExistsByEmailOrIdentificationException;
 import com.terranova.api.v1.common.enums.ErrorCodeEnum;
-import com.terranova.api.v1.user.exception.UserNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -22,18 +20,28 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<ApiError> handleUserNotFound(UserNotFoundException ex){
+    private ResponseEntity<ApiError> buildError(HttpStatus status, ErrorCodeEnum errorCode, String message){
         return ResponseEntity
-                .status(HttpStatus.NOT_FOUND)
-                .body(new ApiError(ErrorCodeEnum.USER_NOT_FOUND, ex.getMessage()));
+                .status(status)
+                .body(new ApiError(errorCode, message));
+    }
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<ApiError> handleUserNotFound(EntityNotFoundException ex){
+        return buildError(
+                HttpStatus.NOT_FOUND,
+                ErrorCodeEnum.ENTITY_NOT_FOUND,
+                ex.getMessage()
+                );
     }
 
     @ExceptionHandler(InvalidJwtTokenException.class)
     public ResponseEntity<ApiError> handleInvalidToken(InvalidJwtTokenException ex){
-        return ResponseEntity
-                .status(HttpStatus.UNAUTHORIZED)
-                .body(new ApiError(ErrorCodeEnum.INVALID_TOKEN, ex.getMessage()));
+        return buildError(
+                HttpStatus.UNAUTHORIZED,
+                ErrorCodeEnum.INVALID_TOKEN,
+                ex.getMessage()
+        );
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -52,36 +60,46 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiError> handleGenericException(Exception ex){
         log.error("Unexpected error: ", ex);
-        return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(new ApiError(ErrorCodeEnum.INTERNAL_ERROR, ex.getClass().getSimpleName() + " : " + ex.getMessage()));
+        return buildError(
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                ErrorCodeEnum.INTERNAL_ERROR,
+                ex.getMessage()
+        );
     }
 
     @ExceptionHandler(UserAlreadyExistsByEmailOrIdentificationException.class)
     public ResponseEntity<ApiError> handleUserExistsByEmailOrIdentification(UserAlreadyExistsByEmailOrIdentificationException ex){
-        return ResponseEntity
-                .status(HttpStatus.CONFLICT)
-                .body(new ApiError(ErrorCodeEnum.USER_ALREADY_EXISTS, ex.getMessage()));
+        return buildError(
+                HttpStatus.CONFLICT,
+                ErrorCodeEnum.USER_ALREADY_EXISTS,
+                ex.getMessage()
+        );
     }
 
     @ExceptionHandler(InvalidBirthDateException.class)
     public  ResponseEntity<ApiError> handleMinimumAgeException(InvalidBirthDateException ex){
-        return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .body(new ApiError(ErrorCodeEnum.INVALID_AGE, ex.getMessage()));
+        return buildError(
+                HttpStatus.BAD_REQUEST,
+                ErrorCodeEnum.INVALID_AGE,
+                ex.getMessage()
+        );
     }
 
     @ExceptionHandler(InternalAuthenticationServiceException.class)
     public  ResponseEntity<ApiError> handleUserNotFoundSpringException(InternalAuthenticationServiceException ex){
-        return ResponseEntity
-                .status(HttpStatus.NOT_FOUND)
-                .body(new ApiError(ErrorCodeEnum.USER_NOT_FOUND, ex.getMessage()));
+        return buildError(
+                HttpStatus.NOT_FOUND,
+                ErrorCodeEnum.USER_NOT_FOUND,
+                ex.getMessage()
+        );
     }
 
     @ExceptionHandler(BadCredentialsException.class)
     public  ResponseEntity<ApiError> handleBadCredentialsException(BadCredentialsException ex){
-        return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .body(new ApiError(ErrorCodeEnum.INCORRECT_PASSWORD, "Ups... Incorrect password, please try again."));
+        return buildError(
+                HttpStatus.UNAUTHORIZED,
+                ErrorCodeEnum.INCORRECT_PASSWORD,
+                "Ups... Incorrect password, please try again."
+        );
     }
 }

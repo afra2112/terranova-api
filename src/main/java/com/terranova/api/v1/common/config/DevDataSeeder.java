@@ -37,7 +37,7 @@ public class DevDataSeeder implements CommandLineRunner {
             roleRepository.save(seller);
         }
 
-        if(!userRepository.existsByEmail("admin@gmail.com")){
+        if(!userRepository.existsByEmailOrIdentification("admin@gmail.com", "1094247745")){
             User admin = new User();
             admin.setEmail("admin@gmail.com");
             admin.setPassword(passwordEncoder.encode("admin1234"));
