@@ -20,7 +20,7 @@ public class Farm extends Product{
     private Double totalSpaceInM2;
 
     @Column(nullable = false)
-    private Double buildedSpaceInM2;
+    private Double builtSpaceInM2;
 
     @Column(nullable = false)
     private int stratum;

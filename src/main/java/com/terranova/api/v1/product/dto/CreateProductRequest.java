@@ -1,57 +1,102 @@
 package com.terranova.api.v1.product.dto;
 
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.terranova.api.v1.product.entity.Cattle;
-import com.terranova.api.v1.product.entity.Farm;
-import com.terranova.api.v1.product.entity.Land;
-import com.terranova.api.v1.product.enums.StatusEnum;
+import com.terranova.api.v1.product.enums.*;
 import jakarta.validation.constraints.*;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-@JsonTypeInfo(
-        use = JsonTypeInfo.Id.NAME,
-        include = JsonTypeInfo.As.PROPERTY,
-        property = "type"
-)
-@JsonSubTypes(
-        {
-                @JsonSubTypes.Type(value = Cattle.class, name = "CATTLE"),
-                @JsonSubTypes.Type(value = Farm.class, name = "Farm"),
-                @JsonSubTypes.Type(value = Land.class, name = "Land")
-        }
-)
-public interface CreateProductRequest {
-    @NotBlank
-    String name();
+public record CreateProductRequest(
+        @NotNull
+        ProductType type,
 
-    @NotNull
-    @DecimalMin(value = "1", inclusive = true)
-    @Digits(integer = 13, fraction = 0)
-    BigDecimal price();
+        @NotBlank
+        String name,
 
-    @NotBlank
-    String description();
+        @NotNull
+        @DecimalMin(value = "1")
+        @Digits(integer = 13, fraction = 0)
+        BigDecimal price,
 
-    @NotNull
-    StatusEnum status();
+        @NotBlank
+        String description,
 
-    @NotNull
-    LocalDate publishDate();
+        @NotNull
+        StatusEnum status,
 
-    @NotNull
-    String city();
+        @NotNull
+        LocalDate publishDate,
 
-    @NotNull
-    @Positive
-    Double latitude();
+        @NotNull
+        String city,
 
-    @NotNull
-    @Positive
-    Double longitude();
+        @NotNull
+        Double latitude,
 
-    @NotNull
-    Long idSeller();
+        @NotNull
+        Double longitude,
+
+        @NotNull
+        @Positive
+        Long idSeller,
+
+        // ---- Cattle fields ----
+        @NotBlank(groups = CattleGroup.class)
+        String race,
+
+        @NotNull(groups = CattleGroup.class)
+        @Positive
+        Double weightInKg,
+
+        @NotNull(groups = CattleGroup.class)
+        @Positive
+        Double cattleAgeInYears,
+
+        @NotNull(groups = CattleGroup.class)
+        CattleGenderEnum gender,
+
+        @NotNull(groups = CattleGroup.class)
+        CattleTypeEnum cattleType,
+
+        @NotNull(groups = CattleGroup.class)
+        @Positive
+        int quantity,
+
+        // ---- Farm fields ----
+        @NotNull(groups = FarmGroup.class)
+        @Positive
+        Double totalSpaceInM2,
+
+        @NotNull(groups = FarmGroup.class)
+        @Positive
+        Double builtSpaceInM2,
+
+        @NotNull(groups = FarmGroup.class)
+        @Positive
+        int stratum,
+
+        @NotNull(groups = FarmGroup.class)
+        @Positive
+        int roomsQuantity,
+
+        @NotNull(groups = FarmGroup.class)
+        @Positive
+        int bathroomsQuantity,
+
+        // ---- Land fields ----
+        @NotNull(groups = LandGroup.class)
+        @Positive
+        Double landSizeInM2,
+
+        @NotBlank(groups = LandGroup.class)
+        String currentUse,
+
+        @NotNull(groups = LandGroup.class)
+        LandTopographyEnum topography,
+
+        @NotNull(groups = LandGroup.class)
+        LandAccessEnum access,
+
+        @NotBlank(groups = LandGroup.class)
+        String currentServices
+) {
 }
