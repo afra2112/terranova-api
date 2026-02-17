@@ -6,9 +6,11 @@ import java.time.LocalDateTime;
 public record ApiError(
         ErrorCodeEnum code,
         String message,
+        int status,
+        String path,
         LocalDateTime timestamp
 ) {
-    public ApiError(ErrorCodeEnum code, String message){
-        this(code, message, LocalDateTime.now());
+    public ApiError(ErrorCodeEnum code, String message, int status, String path){
+        this(code, message, status, path, LocalDateTime.now());
     }
 }
