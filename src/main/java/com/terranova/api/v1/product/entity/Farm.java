@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Table(name = "farms")
@@ -14,6 +15,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Setter
 @Getter
+@SuperBuilder
 public class Farm extends Product{
 
     @Column(nullable = false)

@@ -3,10 +3,8 @@ package com.terranova.api.v1.product.entity;
 import com.terranova.api.v1.product.enums.CattleGenderEnum;
 import com.terranova.api.v1.product.enums.CattleTypeEnum;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Table(name = "cattles")
@@ -14,6 +12,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Setter
 @Getter
+@SuperBuilder
 public class Cattle extends Product {
 
     @Column(nullable = false, length = 30)
