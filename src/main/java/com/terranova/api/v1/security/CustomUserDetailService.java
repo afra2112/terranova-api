@@ -1,6 +1,5 @@
 package com.terranova.api.v1.security;
 
-import com.terranova.api.v1.common.exception.EntityNotFoundException;
 import com.terranova.api.v1.user.entity.User;
 import com.terranova.api.v1.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +19,7 @@ public class CustomUserDetailService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new EntityNotFoundException("User", email));
+                .orElseThrow(() -> new UsernameNotFoundException("Invalid credentials"));
 
         return new CustomUserDetails(user);
     }
