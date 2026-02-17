@@ -1,8 +1,9 @@
 package com.terranova.api.v1.auth.service;
 
 import com.terranova.api.v1.auth.entity.RefreshToken;
-import com.terranova.api.v1.auth.exception.InvalidRefreshTokenException;
 import com.terranova.api.v1.auth.repository.RefreshTokenRepository;
+import com.terranova.api.v1.common.enums.ErrorCodeEnum;
+import com.terranova.api.v1.common.exception.BusinessException;
 import com.terranova.api.v1.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -29,10 +30,10 @@ public class RefreshTokenService {
 
     public RefreshToken validate(String token) {
         RefreshToken refreshToken = refreshTokenRepository.findByToken(token)
-                .orElseThrow(() -> new InvalidRefreshTokenException("Invalid refresh token"));
+                .orElseThrow(() -> new BusinessException(ErrorCodeEnum.INVALID_TOKEN, "Invalid refresh token"));
 
         if (refreshToken.isExpired() || refreshToken.getExpiresAt().isAfter(LocalDateTime.now())) {
-            throw new InvalidRefreshTokenException("Refresh token expired");
+            throw new BusinessException(ErrorCodeEnum.TOKEN_EXPIRED, "Refresh token expired");
         }
 
         return refreshToken;

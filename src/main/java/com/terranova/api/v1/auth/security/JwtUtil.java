@@ -1,7 +1,7 @@
 package com.terranova.api.v1.auth.security;
 
-import com.terranova.api.v1.auth.exception.InvalidJwtTokenException;
-import com.terranova.api.v1.auth.exception.TokenExpiredException;
+import com.terranova.api.v1.common.enums.ErrorCodeEnum;
+import com.terranova.api.v1.common.exception.BusinessException;
 import com.terranova.api.v1.role.enums.RoleEnum;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
@@ -63,10 +63,10 @@ public class JwtUtil {
         try{
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
         }catch (ExpiredJwtException e){
-            throw new TokenExpiredException("Token expired");
+            throw new BusinessException(ErrorCodeEnum.TOKEN_EXPIRED, "Token expired");
 
         }catch (JwtException e){
-            throw new InvalidJwtTokenException("Invalid Token");
+            throw new BusinessException(ErrorCodeEnum.INVALID_TOKEN, "Invalid Token");
         }
     }
 }

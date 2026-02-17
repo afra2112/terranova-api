@@ -1,6 +1,7 @@
 package com.terranova.api.v1.product.service.impl;
 
-import com.terranova.api.v1.common.exception.EntityNotFoundException;
+import com.terranova.api.v1.common.enums.ErrorCodeEnum;
+import com.terranova.api.v1.common.exception.BusinessException;
 import com.terranova.api.v1.product.dto.*;
 import com.terranova.api.v1.product.dto.createRequest.CreateProductRequest;
 import com.terranova.api.v1.product.dto.createResponse.CreateProductResponse;
@@ -37,7 +38,7 @@ public class ProductServiceImpl implements ProductService {
         Product product = productFactory.create(
                 request,
                 userRepository.findByUserId(request.idSeller()).orElseThrow(
-                        () -> new EntityNotFoundException(User.class.getSimpleName(), request.idSeller().toString())
+                        () -> new BusinessException(ErrorCodeEnum.ENTITY_NOT_FOUND, "User SELLER not found with id: " + request.idSeller())
                 )
         );
 

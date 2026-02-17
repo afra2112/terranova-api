@@ -2,11 +2,9 @@ package com.terranova.api.v1.auth.service;
 
 import com.terranova.api.v1.auth.dto.*;
 import com.terranova.api.v1.auth.entity.RefreshToken;
-import com.terranova.api.v1.auth.exception.NullRefreshTokenException;
-import com.terranova.api.v1.common.exception.EntityNotFoundException;
+import com.terranova.api.v1.common.enums.ErrorCodeEnum;
+import com.terranova.api.v1.common.exception.BusinessException;
 import com.terranova.api.v1.security.CustomUserDetails;
-import com.terranova.api.v1.user.exception.InvalidBirthDateException;
-import com.terranova.api.v1.user.exception.UserAlreadyExistsByEmailOrIdentificationException;
 import com.terranova.api.v1.auth.security.JwtUtil;
 import com.terranova.api.v1.role.entity.Role;
 import com.terranova.api.v1.role.enums.RoleEnum;
@@ -16,12 +14,12 @@ import com.terranova.api.v1.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationServiceException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
@@ -40,34 +38,40 @@ public class AuthServiceImplement implements AuthService {
 
     @Override
     public AuthResponse login(AuthRequest request) {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.email(),
-                        request.password()
-                )
-        );
+        try {
 
-        Object principal = authentication.getPrincipal();
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            request.email(),
+                            request.password()
+                    )
+            );
 
-        if (!(principal instanceof CustomUserDetails userDetails)) {
-            throw new AuthenticationServiceException("Expected CustomUserDetails but got: " + principal.getClass());
+            Object principal = authentication.getPrincipal();
+
+            if (!(principal instanceof CustomUserDetails userDetails)) {
+                throw new AuthenticationServiceException("Expected CustomUserDetails but got: " + principal.getClass());
+            }
+
+            User user = userDetails.getUser();
+
+            List<RoleEnum> roles = user.getRoles().stream().map(Role::getRoleName).toList();
+
+            String accessToken = jwtUtil.generateToken(user.getIdentification(), roles);
+            String refreshToken = refreshTokenService.create(user);
+
+            return new AuthResponse(accessToken, refreshToken);
+
+        }catch (BadCredentialsException ex){
+            throw new BusinessException(ErrorCodeEnum.INVALID_CREDENTIALS);
         }
-
-        User user = userDetails.getUser();
-
-        List<RoleEnum> roles = user.getRoles().stream().map(Role::getRoleName).toList();
-
-        String accessToken = jwtUtil.generateToken(user.getIdentification(), roles);
-        String refreshToken = refreshTokenService.create(user);
-
-        return new AuthResponse(accessToken, refreshToken);
     }
 
     @Override
     @Transactional
     public AuthResponse register(RegisterRequest request) {
         if (userRepository.existsByEmailOrIdentification(request.email(), request.identification())){
-            throw new UserAlreadyExistsByEmailOrIdentificationException("You already have an account with that email or identification, please sign in.");
+            throw new BusinessException(ErrorCodeEnum.USER_ALREADY_EXISTS, "You already have an account with that email or identification, please sign in.");
         }
 
         User newUser = userRepository.save(buildNewUser(request));
@@ -94,7 +98,7 @@ public class AuthServiceImplement implements AuthService {
         user.setPassword(passwordEncoder.encode(request.password()));
         user.setRegisterDate(LocalDateTime.now());
         Role role = roleRepository.findByRoleName(RoleEnum.ROLE_BUYER)
-                .orElseThrow(() -> new EntityNotFoundException("Role", "?"));
+                .orElseThrow(() -> new BusinessException(ErrorCodeEnum.ENTITY_NOT_FOUND, "buyer Role not found."));
         user.setRoles(List.of(role));
 
         return user;
@@ -104,7 +108,7 @@ public class AuthServiceImplement implements AuthService {
         int age = Period.between(date, LocalDate.now()).getYears();
 
         if (age < 18){
-            throw new InvalidBirthDateException("You must have al least 18 years of age");
+            throw new BusinessException(ErrorCodeEnum.INVALID_BIRTH_DATE, "You must have al least 18 years of age");
         }
         return date;
     }
@@ -125,7 +129,7 @@ public class AuthServiceImplement implements AuthService {
     @Override
     public void logout(String refreshToken) {
         if (refreshToken == null){
-            throw new NullRefreshTokenException("The given refresh token is null.");
+            throw new BusinessException(ErrorCodeEnum.NULL_REFRESH_TOKEN, "The given refresh token is null.");
         }
         refreshTokenService.invalidate(refreshToken);
     }
