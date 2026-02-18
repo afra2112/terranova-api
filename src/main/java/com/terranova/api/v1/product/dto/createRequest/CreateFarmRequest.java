@@ -23,22 +23,22 @@ public record CreateFarmRequest(
         UUID idSeller,
 
         @NotNull(groups = FarmGroup.class)
-        @Positive
+        @Positive(groups = FarmGroup.class)
         Double totalSpaceInM2,
 
         @NotNull(groups = FarmGroup.class)
-        @Positive
+        @Positive(groups = FarmGroup.class)
         Double builtSpaceInM2,
 
         @NotNull(groups = FarmGroup.class)
-        @Positive
+        @Positive(groups = FarmGroup.class)
         int stratum,
 
         @NotNull(groups = FarmGroup.class)
-        @Positive
+        @Positive(groups = FarmGroup.class)
         int roomsQuantity,
 
         @NotNull(groups = FarmGroup.class)
-        @Positive
+        @Positive(groups = FarmGroup.class)
         int bathroomsQuantity
 ) implements CreateProductRequest {}

@@ -26,7 +26,7 @@ public record CreateLandRequest(
         UUID idSeller,
 
         @NotNull(groups = LandGroup.class)
-        @Positive
+        @Positive(groups = LandGroup.class)
         Double landSizeInM2,
 
         @NotBlank(groups = LandGroup.class)
