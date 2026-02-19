@@ -1,18 +1,14 @@
 package com.terranova.api.v1.auth.service;
 
-import com.terranova.api.v1.auth.dto.AuthRequest;
-import com.terranova.api.v1.auth.dto.AuthResponse;
-import com.terranova.api.v1.auth.dto.RefreshTokenRequest;
-import com.terranova.api.v1.auth.dto.RegisterRequest;
+import com.terranova.api.v1.auth.dto.*;
 import com.terranova.api.v1.auth.entity.RefreshToken;
-import com.terranova.api.v1.auth.exception.NullRefreshTokenException;
 import com.terranova.api.v1.auth.security.JwtUtil;
+import com.terranova.api.v1.common.enums.ErrorCodeEnum;
+import com.terranova.api.v1.common.exception.BusinessException;
 import com.terranova.api.v1.role.entity.Role;
 import com.terranova.api.v1.role.enums.RoleEnum;
 import com.terranova.api.v1.role.repository.RoleRepository;
 import com.terranova.api.v1.user.entity.User;
-import com.terranova.api.v1.user.exception.InvalidBirthDateException;
-import com.terranova.api.v1.user.exception.UserAlreadyExistsByEmailOrIdentificationException;
 import com.terranova.api.v1.user.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -112,10 +108,12 @@ class  AuthServiceImplementTest {
 
             when(userRepository.existsByEmailOrIdentification(email, identification)).thenReturn(true);
 
-            UserAlreadyExistsByEmailOrIdentificationException exception = assertThrows(UserAlreadyExistsByEmailOrIdentificationException.class,
+            BusinessException exception = new BusinessException(ErrorCodeEnum.ENTITY_NOT_FOUND);
+
+            BusinessException exceptionThrows = assertThrows(exception.getClass(),
                     () -> authServiceImplement.register(testRegisterRequest));
 
-            assertEquals("You already have an account with that email or identification, please sign in.", exception.getMessage());
+            assertEquals("You already have an account with that email or identification, please sign in.", exceptionThrows.getMessage());
 
             verify(userRepository, times(1)).existsByEmailOrIdentification(email, identification);
 
@@ -139,7 +137,7 @@ class  AuthServiceImplementTest {
 
             when(userRepository.existsByEmailOrIdentification(testRegisterRequest.email(), testRegisterRequest.identification())).thenReturn(false);
 
-            InvalidBirthDateException exception = assertThrows(InvalidBirthDateException.class, () -> authServiceImplement.register(testRegisterRequest));
+            BusinessException exception = assertThrows(BusinessException.class, () -> authServiceImplement.register(testRegisterRequest));
 
             assertEquals("You must have al least 18 years of age", exception.getMessage());
 
@@ -188,7 +186,6 @@ class  AuthServiceImplementTest {
         @Test
         @DisplayName("Should Generate token even if throw Exception")
         void shouldPropagateExceptionAndCreateToken(){
-            // 1. Arrange (Preparar el escenario)
             User mockUser = new User();
             mockUser.setIdentification("12345");
             mockUser.setRoles(List.of(new Role(RoleEnum.ROLE_BUYER)));
@@ -209,7 +206,6 @@ class  AuthServiceImplementTest {
 
             verify(refreshTokenService).validate("old-token");
             verify(jwtUtil).generateToken(eq("12345"), anyList());
-
             verify(refreshTokenService).rotate(mockRefreshToken);
         }
 
@@ -217,7 +213,7 @@ class  AuthServiceImplementTest {
         @DisplayName("Should throw Exception if refresh token is null")
         void shouldTrowNullRefreshTokenException(){
 
-            NullRefreshTokenException exception = assertThrows(NullRefreshTokenException.class, () -> authServiceImplement.logout(null));
+            BusinessException exception = assertThrows(BusinessException.class, () -> authServiceImplement.logout(null));
             assertEquals("The given refresh token is null.", exception.getMessage());
         }
 
