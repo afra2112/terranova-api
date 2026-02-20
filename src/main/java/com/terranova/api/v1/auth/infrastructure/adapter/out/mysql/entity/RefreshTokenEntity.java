@@ -1,6 +1,5 @@
 package com.terranova.api.v1.auth.infrastructure.adapter.out.mysql.entity;
 
-import com.terranova.api.v1.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -31,7 +30,6 @@ public class RefreshTokenEntity {
     @Column(nullable = false)
     private boolean isExpired = false;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+    @Column(nullable = false)
+    private String userIdentification;
 }

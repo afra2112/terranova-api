@@ -3,6 +3,7 @@ package com.terranova.api.v1.auth.infrastructure.adapter.in.web.controller;
 import com.terranova.api.v1.auth.application.usecase.LoginUseCase;
 import com.terranova.api.v1.auth.application.usecase.LogoutUseCase;
 import com.terranova.api.v1.auth.application.usecase.RefreshTokenUseCase;
+import com.terranova.api.v1.auth.application.usecase.RegisterUseCase;
 import com.terranova.api.v1.auth.infrastructure.adapter.in.web.dto.request.AuthRequest;
 import com.terranova.api.v1.auth.infrastructure.adapter.in.web.dto.request.RefreshTokenRequest;
 import com.terranova.api.v1.auth.infrastructure.adapter.in.web.dto.request.RegisterRequest;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
     private final LoginUseCase loginUseCase;
+    private final RegisterUseCase registerUseCase;
     private final AuthMapper authMapper;
 
     @PostMapping("/login")
@@ -38,7 +40,9 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequest request){
-        return ResponseEntity.ok(authService.register(request));
+        return ResponseEntity.ok(
+                authMapper.toAuthResponse(registerUseCase.) authService.register(request)
+        );
     }
 
     @PostMapping("/logout")

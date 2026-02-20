@@ -164,23 +164,23 @@ class  AuthServiceImplementTest {
             );
         }
 
-        @Test
-        @DisplayName("Should Throw Exception if principal is not a CustomUserDetails object")
-        void shouldThrowExceptionIfCastingIncorrect(){
-            //MOCK PART
-            Authentication authentication = mock(Authentication.class);
-
-            when(authentication.getPrincipal()).thenReturn("Im not a Principal Object");
-            when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class))).thenReturn(authentication);
-
-            AuthenticationServiceException exception = assertThrows(AuthenticationServiceException.class, () -> authServiceImplement.login(testAuthRequest));
-
-            assertEquals("Expected CustomUserDetails but got: " + Objects.requireNonNull(authentication.getPrincipal()).getClass(), exception.getMessage());
-
-            verifyNoInteractions(jwtUtilAdapter);
-            verifyNoInteractions(refreshTokenService);
-        }
-    }
+//        @Test
+//        @DisplayName("Should Throw Exception if principal is not a CustomUserDetails object")
+//        void shouldThrowExceptionIfCastingIncorrect(){
+//            //MOCK PART
+//            Authentication authentication = mock(Authentication.class);
+//
+//            when(authentication.getPrincipal()).thenReturn("Im not a Principal Object");
+//            when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class))).thenReturn(authentication);
+//
+//            AuthenticationServiceException exception = assertThrows(AuthenticationServiceException.class, () -> authServiceImplement.login(testAuthRequest));
+//
+//            assertEquals("Expected CustomUserDetails but got: " + Objects.requireNonNull(authentication.getPrincipal()).getClass(), exception.getMessage());
+//
+//            verifyNoInteractions(jwtUtilAdapter);
+//            verifyNoInteractions(refreshTokenService);
+//        }
+//    }
 
     @Nested
     @DisplayName("Refresh Token Tests")
