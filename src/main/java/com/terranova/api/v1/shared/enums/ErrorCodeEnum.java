@@ -1,0 +1,15 @@
+package com.terranova.api.v1.shared.enums;
+
+public enum ErrorCodeEnum {
+    USER_NOT_FOUND,
+    ENTITY_NOT_FOUND,
+    INVALID_TOKEN,
+    VALIDATION_ERROR,
+    INTERNAL_ERROR,
+    UNAUTHORIZED,
+    USER_ALREADY_EXISTS,
+    INVALID_AGE,
+    INCORRECT_PASSWORD,
+    NULL_REFRESH_TOKEN,
+    TOKEN_EXPIRED
+}

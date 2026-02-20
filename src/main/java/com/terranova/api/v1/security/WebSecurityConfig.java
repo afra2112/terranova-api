@@ -1,6 +1,6 @@
 package com.terranova.api.v1.security;
 
-import com.terranova.api.v1.auth.security.AuthTokenFilter;
+import com.terranova.api.v1.auth.infrastructure.config.security.AuthTokenFilter;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

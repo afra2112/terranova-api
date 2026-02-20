@@ -1,6 +1,6 @@
 package com.terranova.api.v1.security;
 
-import com.terranova.api.v1.common.exception.EntityNotFoundException;
+import com.terranova.api.v1.shared.exception.EntityNotFoundException;
 import com.terranova.api.v1.user.entity.User;
 import com.terranova.api.v1.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;

@@ -1,6 +1,6 @@
 package com.terranova.api.v1.user.entity;
 
-import com.terranova.api.v1.auth.entity.RefreshToken;
+import com.terranova.api.v1.auth.infrastructure.adapter.out.mysql.entity.RefreshTokenEntity;
 import com.terranova.api.v1.role.entity.Role;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -83,5 +83,5 @@ public class User {
     private int userScore;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<RefreshToken> refreshTokens;
+    private List<RefreshTokenEntity> refreshTokenEntities;
 }

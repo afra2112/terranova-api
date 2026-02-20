@@ -1,12 +1,13 @@
 package com.terranova.api.v1.auth.service;
 
-import com.terranova.api.v1.auth.dto.AuthRequest;
-import com.terranova.api.v1.auth.dto.AuthResponse;
-import com.terranova.api.v1.auth.dto.RefreshTokenRequest;
-import com.terranova.api.v1.auth.dto.RegisterRequest;
-import com.terranova.api.v1.auth.entity.RefreshToken;
+import com.terranova.api.v1.auth.infrastructure.adapter.out.jwt.RefreshTokenService;
+import com.terranova.api.v1.auth.infrastructure.adapter.in.web.dto.request.AuthRequest;
+import com.terranova.api.v1.auth.infrastructure.adapter.in.web.dto.response.AuthResponse;
+import com.terranova.api.v1.auth.infrastructure.adapter.in.web.dto.request.RefreshTokenRequest;
+import com.terranova.api.v1.auth.infrastructure.adapter.in.web.dto.request.RegisterRequest;
+import com.terranova.api.v1.auth.infrastructure.adapter.out.mysql.entity.RefreshTokenEntity;
 import com.terranova.api.v1.auth.exception.NullRefreshTokenException;
-import com.terranova.api.v1.auth.security.JwtUtil;
+import com.terranova.api.v1.auth.infrastructure.adapter.out.jwt.JwtUtilAdapter;
 import com.terranova.api.v1.role.entity.Role;
 import com.terranova.api.v1.role.enums.RoleEnum;
 import com.terranova.api.v1.role.repository.RoleRepository;
@@ -42,7 +43,7 @@ class  AuthServiceImplementTest {
     @Mock
     private AuthenticationManager authenticationManager;
     @Mock
-    private JwtUtil jwtUtil;
+    private JwtUtilAdapter jwtUtilAdapter;
     @Mock
     private RefreshTokenService refreshTokenService;
     @Mock
@@ -88,7 +89,7 @@ class  AuthServiceImplementTest {
             when(passwordEncoder.encode(anyString())).thenReturn("password encoded");
             when(roleRepository.findByRoleName(RoleEnum.ROLE_BUYER)).thenReturn(Optional.of(testRole));
             when(userRepository.save(any(User.class))).thenAnswer(invocationOnMock -> invocationOnMock.getArgument(0));
-            when(jwtUtil.generateToken(anyString(), anyList())).thenReturn("token generated");
+            when(jwtUtilAdapter.generateToken(anyString(), anyList())).thenReturn("token generated");
             when(refreshTokenService.create(any(User.class))).thenReturn("refreshToken generated");
 
             final AuthResponse result = authServiceImplement.register(testRegisterRequest);
@@ -100,7 +101,7 @@ class  AuthServiceImplementTest {
             verify(userRepository).save(any(User.class));
             verify(roleRepository).findByRoleName(RoleEnum.ROLE_BUYER);
             verify(passwordEncoder).encode(testRegisterRequest.password());
-            verify(jwtUtil).generateToken(anyString(), anyList());
+            verify(jwtUtilAdapter).generateToken(anyString(), anyList());
             verify(refreshTokenService).create(any(User.class));
         }
 
@@ -120,7 +121,7 @@ class  AuthServiceImplementTest {
             verify(userRepository, times(1)).existsByEmailOrIdentification(email, identification);
 
             verify(userRepository, times(0)).save(any(User.class));
-            verifyNoInteractions(jwtUtil);
+            verifyNoInteractions(jwtUtilAdapter);
             verifyNoInteractions(refreshTokenService);
         }
 
@@ -144,7 +145,7 @@ class  AuthServiceImplementTest {
             assertEquals("You must have al least 18 years of age", exception.getMessage());
 
             verify(userRepository, times(0)).save(any(User.class));
-            verifyNoInteractions(jwtUtil);
+            verifyNoInteractions(jwtUtilAdapter);
             verifyNoInteractions(refreshTokenService);
         }
     }
@@ -176,14 +177,14 @@ class  AuthServiceImplementTest {
 
             assertEquals("Expected CustomUserDetails but got: " + Objects.requireNonNull(authentication.getPrincipal()).getClass(), exception.getMessage());
 
-            verifyNoInteractions(jwtUtil);
+            verifyNoInteractions(jwtUtilAdapter);
             verifyNoInteractions(refreshTokenService);
         }
     }
 
     @Nested
     @DisplayName("Refresh Token Tests")
-    class RefreshTokenTests{
+    class RefreshTokenEntityTests {
 
         @Test
         @DisplayName("Should Generate token even if throw Exception")
@@ -193,12 +194,12 @@ class  AuthServiceImplementTest {
             mockUser.setIdentification("12345");
             mockUser.setRoles(List.of(new Role(RoleEnum.ROLE_BUYER)));
 
-            RefreshToken mockRefreshToken = new RefreshToken();
-            mockRefreshToken.setUser(mockUser);
+            RefreshTokenEntity mockRefreshTokenEntity = new RefreshTokenEntity();
+            mockRefreshTokenEntity.setUser(mockUser);
 
-            when(refreshTokenService.validate(anyString())).thenReturn(mockRefreshToken);
-            when(jwtUtil.generateToken(anyString(), anyList())).thenReturn("new-access-token");
-            when(refreshTokenService.rotate(any(RefreshToken.class)))
+            when(refreshTokenService.validate(anyString())).thenReturn(mockRefreshTokenEntity);
+            when(jwtUtilAdapter.generateToken(anyString(), anyList())).thenReturn("new-access-token");
+            when(refreshTokenService.rotate(any(RefreshTokenEntity.class)))
                     .thenThrow(new RuntimeException("Database connection failed"));
 
             RuntimeException exception = assertThrows(RuntimeException.class, () ->
@@ -208,9 +209,9 @@ class  AuthServiceImplementTest {
             assertEquals("Database connection failed", exception.getMessage());
 
             verify(refreshTokenService).validate("old-token");
-            verify(jwtUtil).generateToken(eq("12345"), anyList());
+            verify(jwtUtilAdapter).generateToken(eq("12345"), anyList());
 
-            verify(refreshTokenService).rotate(mockRefreshToken);
+            verify(refreshTokenService).rotate(mockRefreshTokenEntity);
         }
 
         @Test
