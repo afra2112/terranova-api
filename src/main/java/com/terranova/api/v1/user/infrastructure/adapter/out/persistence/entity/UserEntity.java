@@ -1,4 +1,4 @@
-package com.terranova.api.v1.user.entity;
+package com.terranova.api.v1.user.infrastructure.adapter.out.persistence.entity;
 
 import com.terranova.api.v1.auth.infrastructure.adapter.out.mysql.entity.RefreshTokenEntity;
 import com.terranova.api.v1.role.entity.Role;
@@ -12,13 +12,14 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
+@Builder
 @Entity
 @Table(name = "users")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
+public class UserEntity {
 
     @Id
     @GeneratedValue

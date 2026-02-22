@@ -4,7 +4,7 @@ import com.terranova.api.v1.auth.domain.model.AuthenticatedUser;
 import com.terranova.api.v1.auth.domain.model.UserCredential;
 import com.terranova.api.v1.auth.domain.ports.out.AuthenticationPort;
 import com.terranova.api.v1.security.CustomUserDetails;
-import com.terranova.api.v1.user.entity.User;
+import com.terranova.api.v1.user.infrastructure.adapter.out.persistence.entity.UserEntity;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationServiceException;
@@ -34,7 +34,7 @@ public class AuthenticationPortAdapter implements AuthenticationPort {
 
             }
 
-            User user = userDetails.getUser();
+            UserEntity user = userDetails.getUser();
             List<String> roles = user.getRoles().stream().map(role -> role.getRoleName().name()).toList();
 
             return new AuthenticatedUser(user.getIdentification(), roles);

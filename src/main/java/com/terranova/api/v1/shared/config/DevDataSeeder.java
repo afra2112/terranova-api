@@ -3,8 +3,8 @@ package com.terranova.api.v1.shared.config;
 import com.terranova.api.v1.role.entity.Role;
 import com.terranova.api.v1.role.enums.RoleEnum;
 import com.terranova.api.v1.role.repository.RoleRepository;
-import com.terranova.api.v1.user.entity.User;
-import com.terranova.api.v1.user.repository.UserRepository;
+import com.terranova.api.v1.user.infrastructure.adapter.out.persistence.entity.UserEntity;
+import com.terranova.api.v1.user.infrastructure.adapter.out.persistence.jpa.JpaUserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 @Profile("dev")
 public class DevDataSeeder implements CommandLineRunner {
 
-    private final UserRepository userRepository;
+    private final JpaUserRepository jpaUserRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
 
@@ -36,8 +36,8 @@ public class DevDataSeeder implements CommandLineRunner {
             roleRepository.save(seller);
         }
 
-        if(!userRepository.existsByEmailOrIdentification("admin@gmail.com", "1094247745")){
-            User admin = new User();
+        if(!jpaUserRepository.existsByEmailOrIdentification("admin@gmail.com", "1094247745")){
+            UserEntity admin = new UserEntity();
             admin.setEmail("admin@gmail.com");
             admin.setPassword(passwordEncoder.encode("admin1234"));
             admin.setRoles(roleRepository.findAll());
@@ -47,7 +47,7 @@ public class DevDataSeeder implements CommandLineRunner {
             admin.setPhoneNumber("3102162732");
             admin.setBirthday(LocalDate.of(2007, 6, 5));
             admin.setRegisterDate(LocalDateTime.now());
-            userRepository.save(admin);
+            jpaUserRepository.save(admin);
         }
     }
 }

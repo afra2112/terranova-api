@@ -41,7 +41,7 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequest request){
         return ResponseEntity.ok(
-                authMapper.toAuthResponse(registerUseCase.) authService.register(request)
+                authMapper.toAuthResponse(registerUseCase)
         );
     }
 

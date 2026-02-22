@@ -5,7 +5,7 @@ import com.terranova.api.v1.auth.infrastructure.adapter.in.web.dto.response.Auth
 import com.terranova.api.v1.role.entity.Role;
 import com.terranova.api.v1.role.enums.RoleEnum;
 import com.terranova.api.v1.shared.exception.EntityNotFoundException;
-import com.terranova.api.v1.user.entity.User;
+import com.terranova.api.v1.user.infrastructure.adapter.out.persistence.entity.UserEntity;
 import com.terranova.api.v1.user.exception.InvalidBirthDateException;
 import com.terranova.api.v1.user.exception.UserAlreadyExistsByEmailOrIdentificationException;
 
@@ -22,7 +22,7 @@ public class RegisterUseCase {
             throw new UserAlreadyExistsByEmailOrIdentificationException("You already have an account with that email or identification, please sign in.");
         }
 
-        User newUser = userRepository.save(buildNewUser(request));
+        UserEntity newUser = userRepository.save(buildNewUser(request));
 
         List<RoleEnum> rolesEnum = newUser.getRoles().stream()
                 .map(role -> RoleEnum.ROLE_BUYER).toList();
@@ -33,10 +33,10 @@ public class RegisterUseCase {
     }
 
     //TODO: implement builder design pattern
-    private User buildNewUser(RegisterRequest request){
+    private UserEntity buildNewUser(RegisterRequest request){
         LocalDate birthday = validateBirthDate(request.birthday());
 
-        User user = new User();
+        UserEntity user = new UserEntity();
         user.setNames(request.names());
         user.setLastName(request.lastName());
         user.setBirthday(birthday);

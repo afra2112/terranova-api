@@ -1,7 +1,7 @@
 package com.terranova.api.v1.role.entity;
 
 import com.terranova.api.v1.role.enums.RoleEnum;
-import com.terranova.api.v1.user.entity.User;
+import com.terranova.api.v1.user.infrastructure.adapter.out.persistence.entity.UserEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,7 +23,7 @@ public class Role {
     private RoleEnum roleName;
 
     @ManyToMany(mappedBy = "roles")
-    private List<User> users;
+    private List<UserEntity> users;
 
     public Role(RoleEnum roleEnum) {
     }

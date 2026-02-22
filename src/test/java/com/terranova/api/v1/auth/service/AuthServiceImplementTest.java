@@ -11,10 +11,10 @@ import com.terranova.api.v1.auth.infrastructure.adapter.out.jwt.JwtUtilAdapter;
 import com.terranova.api.v1.role.entity.Role;
 import com.terranova.api.v1.role.enums.RoleEnum;
 import com.terranova.api.v1.role.repository.RoleRepository;
-import com.terranova.api.v1.user.entity.User;
+import com.terranova.api.v1.user.infrastructure.adapter.out.persistence.entity.UserEntity;
 import com.terranova.api.v1.user.exception.InvalidBirthDateException;
 import com.terranova.api.v1.user.exception.UserAlreadyExistsByEmailOrIdentificationException;
-import com.terranova.api.v1.user.repository.UserRepository;
+import com.terranova.api.v1.user.infrastructure.adapter.out.persistence.jpa.JpaUserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -24,13 +24,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.AuthenticationServiceException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 import static org.mockito.Mockito.*;
@@ -47,7 +43,7 @@ class  AuthServiceImplementTest {
     @Mock
     private RefreshTokenService refreshTokenService;
     @Mock
-    private UserRepository userRepository;
+    private JpaUserRepository jpaUserRepository;
     @Mock
     private RoleRepository roleRepository;
     @Mock
@@ -85,12 +81,12 @@ class  AuthServiceImplementTest {
         @Test
         @DisplayName("Should create user successfully")
         void shouldCreateUserSuccesfully(){
-            when(userRepository.existsByEmailOrIdentification(testRegisterRequest.email(), testRegisterRequest.identification())).thenReturn(false);
+            when(jpaUserRepository.existsByEmailOrIdentification(testRegisterRequest.email(), testRegisterRequest.identification())).thenReturn(false);
             when(passwordEncoder.encode(anyString())).thenReturn("password encoded");
             when(roleRepository.findByRoleName(RoleEnum.ROLE_BUYER)).thenReturn(Optional.of(testRole));
-            when(userRepository.save(any(User.class))).thenAnswer(invocationOnMock -> invocationOnMock.getArgument(0));
+            when(jpaUserRepository.save(any(UserEntity.class))).thenAnswer(invocationOnMock -> invocationOnMock.getArgument(0));
             when(jwtUtilAdapter.generateToken(anyString(), anyList())).thenReturn("token generated");
-            when(refreshTokenService.create(any(User.class))).thenReturn("refreshToken generated");
+            when(refreshTokenService.create(any(UserEntity.class))).thenReturn("refreshToken generated");
 
             final AuthResponse result = authServiceImplement.register(testRegisterRequest);
 
@@ -98,11 +94,11 @@ class  AuthServiceImplementTest {
             assertEquals("token generated", result.accessToken());
             assertEquals("refreshToken generated", result.refreshToken());
 
-            verify(userRepository).save(any(User.class));
+            verify(jpaUserRepository).save(any(UserEntity.class));
             verify(roleRepository).findByRoleName(RoleEnum.ROLE_BUYER);
             verify(passwordEncoder).encode(testRegisterRequest.password());
             verify(jwtUtilAdapter).generateToken(anyString(), anyList());
-            verify(refreshTokenService).create(any(User.class));
+            verify(refreshTokenService).create(any(UserEntity.class));
         }
 
         @Test
@@ -111,16 +107,16 @@ class  AuthServiceImplementTest {
             String email = "andres@gmail.com";
             String identification = "1094247745";
 
-            when(userRepository.existsByEmailOrIdentification(email, identification)).thenReturn(true);
+            when(jpaUserRepository.existsByEmailOrIdentification(email, identification)).thenReturn(true);
 
             UserAlreadyExistsByEmailOrIdentificationException exception = assertThrows(UserAlreadyExistsByEmailOrIdentificationException.class,
                     () -> authServiceImplement.register(testRegisterRequest));
 
             assertEquals("You already have an account with that email or identification, please sign in.", exception.getMessage());
 
-            verify(userRepository, times(1)).existsByEmailOrIdentification(email, identification);
+            verify(jpaUserRepository, times(1)).existsByEmailOrIdentification(email, identification);
 
-            verify(userRepository, times(0)).save(any(User.class));
+            verify(jpaUserRepository, times(0)).save(any(UserEntity.class));
             verifyNoInteractions(jwtUtilAdapter);
             verifyNoInteractions(refreshTokenService);
         }
@@ -138,13 +134,13 @@ class  AuthServiceImplementTest {
                     LocalDate.of(2010,5,5)
             );
 
-            when(userRepository.existsByEmailOrIdentification(testRegisterRequest.email(), testRegisterRequest.identification())).thenReturn(false);
+            when(jpaUserRepository.existsByEmailOrIdentification(testRegisterRequest.email(), testRegisterRequest.identification())).thenReturn(false);
 
             InvalidBirthDateException exception = assertThrows(InvalidBirthDateException.class, () -> authServiceImplement.register(testRegisterRequest));
 
             assertEquals("You must have al least 18 years of age", exception.getMessage());
 
-            verify(userRepository, times(0)).save(any(User.class));
+            verify(jpaUserRepository, times(0)).save(any(UserEntity.class));
             verifyNoInteractions(jwtUtilAdapter);
             verifyNoInteractions(refreshTokenService);
         }
@@ -190,7 +186,7 @@ class  AuthServiceImplementTest {
         @DisplayName("Should Generate token even if throw Exception")
         void shouldPropagateExceptionAndCreateToken(){
             // 1. Arrange (Preparar el escenario)
-            User mockUser = new User();
+            UserEntity mockUser = new UserEntity();
             mockUser.setIdentification("12345");
             mockUser.setRoles(List.of(new Role(RoleEnum.ROLE_BUYER)));
 
