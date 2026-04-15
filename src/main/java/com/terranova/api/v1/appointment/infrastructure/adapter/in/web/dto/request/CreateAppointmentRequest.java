@@ -12,11 +12,9 @@ public record CreateAppointmentRequest(
         LocalDate date,
 
         @NotNull
-        @Future
         LocalTime startTime,
 
         @NotNull
-        @Future
         LocalTime endTime,
 
         @Nullable

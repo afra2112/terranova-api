@@ -64,6 +64,7 @@ public class UserEntity {
 //
 //    private boolean recibirCorreos = true;
 
+    @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
     @NotEmpty
     private List<RoleEnum> roles;

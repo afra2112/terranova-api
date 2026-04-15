@@ -48,7 +48,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                     identification,
-                    null,
+                    token,
                     authorities
             );
 

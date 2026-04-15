@@ -47,15 +47,15 @@ public class ProductController {
         return ResponseEntity.ok().body(productMapper.domainToResponse(createProductUseCase.createProduct(productMapper.requestToCommand(request))));
     }
 
-    @GetMapping("/{productId}")
+    @GetMapping("/{id}")
     @PreAuthorize("hasRole('SELLER')")
-    public ResponseEntity<CreateProductResponse> getProductById(@Valid @NotNull @Positive @PathVariable Long productId){
-        return ResponseEntity.ok(productMapper.domainToResponse(getProductUseCase.getProduct(productId)));
+    public ResponseEntity<CreateProductResponse> getProductById(@Valid @NotNull @Positive @PathVariable Long id){
+        return ResponseEntity.ok(productMapper.domainToResponse(getProductUseCase.getProduct(id)));
     }
 
-    @PostMapping(value = "/{productId}/images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/{id}/images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasRole('SELLER')")
-    public ResponseEntity<List<ImageResponse>> saveImagesForProduct(@Valid @NotNull @Positive @PathVariable Long productId, @RequestPart("files") List<MultipartFile> files){
+    public ResponseEntity<List<ImageResponse>> saveImagesForProduct(@Valid @NotNull @Positive @PathVariable Long id, @RequestPart("files") List<MultipartFile> files){
         List<CreateImageCommand> commands = IntStream.range(0, files.size())
                 .mapToObj(i -> {
                     MultipartFile file = files.get(i);
@@ -73,7 +73,7 @@ public class ProductController {
                 })
                 .toList();
 
-        return ResponseEntity.ok(createImageUseCase.createImages(commands, productId).stream()
+        return ResponseEntity.ok(createImageUseCase.createImages(commands, id).stream()
                 .map(imageMapper::domainToResponse).toList());
     }
 
