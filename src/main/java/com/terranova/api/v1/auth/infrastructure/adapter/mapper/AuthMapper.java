@@ -9,13 +9,18 @@ import com.terranova.api.v1.auth.infrastructure.adapter.in.web.dto.request.Regis
 import com.terranova.api.v1.auth.infrastructure.adapter.in.web.dto.response.AuthResponse;
 import com.terranova.api.v1.auth.infrastructure.adapter.out.persistence.entity.RefreshTokenEntity;
 import com.terranova.api.v1.user.domain.model.User;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Component
+@RequiredArgsConstructor
 public class AuthMapper {
+
+    private final PasswordEncoder passwordEncoder;
 
     public UserCredential toUserCredential(AuthRequest request){
         return new UserCredential(
@@ -76,7 +81,7 @@ public class AuthMapper {
                 newUserDomain.names(),
                 newUserDomain.lastName(),
                 newUserDomain.email(),
-                newUserDomain.password(),
+                passwordEncoder.encode(newUserDomain.password()),
                 newUserDomain.phoneNumber(),
                 newUserDomain.birthday(),
                 newUserDomain.registerDate(),

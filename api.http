@@ -16,16 +16,38 @@ POST http://localhost:8080/api/v1/auth/login
 Content-Type: application/json
 
 {
-  "email": "admin@gmail.com",
-  "password": "admin1234"
+  "email": "andres@gmail.com",
+  "password": "andres1234"
+}
+
+###
+POST http://localhost:8080/api/v1/products
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJyb2xlcyI6WyJST0xFX0JVWUVSIl0sInN1YiI6IjEyMzQ1Njc4OTAiLCJpYXQiOjE3NzY2MzE4NjAsImV4cCI6MTc3NjYzMTg5MH0.UlaT1qW_wPLVVN_ND4Snm1vPVLgr_qWtDUz4EnuZG-m5zfG_G6bEdqjGQ21Ck6gUVoB5TtcfEZu_RvyIvAVd9g
+Content-Type: application/json
+
+{
+  "productType": "CATTLE",
+  "name": "Ganado 1 test",
+  "price": 3500000,
+  "description": "test description",
+  "city": "bogota",
+  "latitude": 100000123.01,
+  "longitude": 123564231.45,
+  "idSeller": "f1f2caea-0d13-4667-be68-441b32c2eb4f",
+  "race": "test cattle race",
+  "weightInKg": 56,
+  "cattleAgeInYears": 2,
+  "gender": "FEMALE",
+  "cattleType": "BEEF",
+  "quantity": 1
 }
 
 ###
 GET http://localhost:8080/api/v1/seller/
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJyb2xlcyI6W10sInN1YiI6IjEwOTQyNDc3NDUiLCJpYXQiOjE3NzYzMDMyOTIsImV4cCI6MTc3NjMwMzMyMn0.tlLj1QZN_eEZysOLK7sEHq3yL2E2LvJTHApbHKFhSCesbQl1FN7ksw3GeO0HJ07E
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJyb2xlcyI6WyJST0xFX0JVWUVSIiwiUk9MRV9TRUxMRVIiXSwic3ViIjoiMTA5NDI0Nzc0NSIsImlhdCI6MTc3NjYzMTMyMCwiZXhwIjoxNzc2NjMxMzUwfQ.8IN4-eQfEMBjie7_xNQEMhbZ5uCRSCCWrJ5Bp3JIL2WZt3w5yF7cnR8BQZwoeIOdDVVBXf82804BTHqoFXyhAQ
 Content-Type: application/json
 
 ###
 GET http://localhost:8080/api/v1/buyer/
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJyb2xlcyI6W10sInN1YiI6IjEwOTQyNDc3NDUiLCJpYXQiOjE3NzYzMDMzMTcsImV4cCI6MTc3NjMwMzM0N30.99lvhbsRzoCW8G4iB8Z61fRhd64TY-5u-gbcVC_wKqq38DjfbvPoFKOPZTwG73rk
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJyb2xlcyI6WyJST0xFX0JVWUVSIl0sInN1YiI6IjEyMzQ1Njc4OTAiLCJpYXQiOjE3NzY2MzEyODAsImV4cCI6MTc3NjYzMTMxMH0.1uBsZET0HcJC9VMfllg7Qbk5Zd3l0qTdWnXjP46KTZN3LM_QA9vqmSCmq5K0W26Q8IecRd777r_mxh0-BMM_tg
 Content-Type: application/json
