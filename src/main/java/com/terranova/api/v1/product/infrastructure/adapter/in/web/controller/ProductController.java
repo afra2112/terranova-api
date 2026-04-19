@@ -8,7 +8,7 @@ import com.terranova.api.v1.product.domain.model.group.CattleGroup;
 import com.terranova.api.v1.product.domain.model.group.FarmGroup;
 import com.terranova.api.v1.product.domain.model.group.LandGroup;
 import com.terranova.api.v1.product.domain.port.out.ValidatorPort;
-import com.terranova.api.v1.product.infrastructure.adapter.in.web.dto.request.CreateProductRequest;
+import com.terranova.api.v1.product.infrastructure.adapter.in.web.dto.request.create.CreateProductRequest;
 import com.terranova.api.v1.product.infrastructure.adapter.in.web.dto.response.CreateProductResponse;
 import com.terranova.api.v1.product.infrastructure.adapter.in.web.dto.response.ImageResponse;
 import com.terranova.api.v1.product.infrastructure.adapter.mapper.ImageMapper;
