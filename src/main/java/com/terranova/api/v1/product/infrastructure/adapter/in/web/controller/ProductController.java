@@ -51,9 +51,7 @@ public class ProductController {
     }
 
     @GetMapping
-    @PreAuthorize("hasRole('BUYER')")
     public ResponseEntity<List<CreateProductResponse>> searchProducts(@RequestBody SearchProductRequest request){
-        validatorPort.validate(request, getGroupFromRequestProductType(request.productType().name()));
         return ResponseEntity.ok().body(
                 searchProductsUseCase.searchProducts(productMapper.searchRequestToCommand(request))
                         .stream()
