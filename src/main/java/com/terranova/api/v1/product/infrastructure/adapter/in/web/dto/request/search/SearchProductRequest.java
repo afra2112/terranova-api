@@ -3,13 +3,14 @@ package com.terranova.api.v1.product.infrastructure.adapter.in.web.dto.request.s
 import com.terranova.api.v1.product.domain.model.enums.*;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.UUID;
 
 
 public record SearchProductRequest(
         //GENERAL
+        UUID sellerId,
         String name,
         @Positive
         BigDecimal minPrice,

@@ -16,13 +16,13 @@ POST http://localhost:8080/api/v1/auth/login
 Content-Type: application/json
 
 {
-  "email": "andres@gmail.com",
-  "password": "andres1234"
+  "email": "admin@gmail.com",
+  "password": "admin1234"
 }
 ###
 
 POST http://localhost:8080/api/v1/products
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJyb2xlcyI6WyJST0xFX0JVWUVSIl0sInN1YiI6IjEyMzQ1Njc4OTAiLCJpYXQiOjE3NzY2MzI2MDYsImV4cCI6MTc3NjYzMjYzNn0._MuaZQHh5YDO_rgvFPbxUMuY8LI3HxqI8dIEMZZJcVG2dTadihQuGinfcE4_W7PXjpTYd9_DXxWiqkJOULNYVw
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJyb2xlcyI6WyJST0xFX0JVWUVSIiwiUk9MRV9TRUxMRVIiXSwic3ViIjoiMTA5NDI0Nzc0NSIsImlhdCI6MTc3NjY0Njg4NiwiZXhwIjoxNzc2NjQ2OTE2fQ.8q1xvOBA6vNXDMdIvH5pCe9JXoe14I1MIIMXw3B36bw1_5ks2HK4AViMTahg0Qq4SQdwvPumUaRils-g7Bfa5g
 Content-Type: application/json
 
 {
@@ -47,7 +47,7 @@ GET http://localhost:8080/api/v1/products
 Content-Type: application/json
 
 {
-
+  "sellerId": "7cf0f3bc-9a8e-440c-b907-7de103093d6d"
 }
 ###
 

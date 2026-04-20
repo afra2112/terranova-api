@@ -4,10 +4,12 @@ import com.terranova.api.v1.product.domain.model.enums.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.UUID;
 
 public record SearchProductCommand (
 
         //GENERAL
+        UUID sellerId,
         String name,
         BigDecimal minPrice,
         BigDecimal maxPrice,
