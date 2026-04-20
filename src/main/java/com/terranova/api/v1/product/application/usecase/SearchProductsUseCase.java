@@ -14,7 +14,7 @@ public class SearchProductsUseCase {
         this.productRepositoryPort = productRepositoryPort;
     }
 
-    public List<Product> searchProducts(SearchProductCommand){
-
+    public List<Product> searchProducts(SearchProductCommand command){
+        return productRepositoryPort.searchProducts(command);
     }
 }

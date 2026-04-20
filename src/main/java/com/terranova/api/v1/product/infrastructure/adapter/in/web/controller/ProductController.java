@@ -11,7 +11,7 @@ import com.terranova.api.v1.product.domain.model.group.LandGroup;
 import com.terranova.api.v1.product.domain.port.out.ValidatorPort;
 import com.terranova.api.v1.product.infrastructure.adapter.in.web.dto.request.create.CreateProductRequest;
 import com.terranova.api.v1.product.infrastructure.adapter.in.web.dto.request.search.SearchProductRequest;
-import com.terranova.api.v1.product.infrastructure.adapter.in.web.dto.response.CreateProductResponse;
+import com.terranova.api.v1.product.infrastructure.adapter.in.web.dto.response.create.CreateProductResponse;
 import com.terranova.api.v1.product.infrastructure.adapter.in.web.dto.response.ImageResponse;
 import com.terranova.api.v1.product.infrastructure.adapter.mapper.ImageMapper;
 import com.terranova.api.v1.product.infrastructure.adapter.mapper.ProductMapper;
@@ -54,7 +54,12 @@ public class ProductController {
     @PreAuthorize("hasRole('BUYER')")
     public ResponseEntity<List<CreateProductResponse>> searchProducts(@RequestBody SearchProductRequest request){
         validatorPort.validate(request, getGroupFromRequestProductType(request.productType().name()));
-        return ResponseEntity.ok().body(productMapper.domainToResponse(searchProductsUseCase.searchProducts(productMapper.requestToCommand(request))));
+        return ResponseEntity.ok().body(
+                searchProductsUseCase.searchProducts(productMapper.searchRequestToCommand(request))
+                        .stream()
+                        .map(productMapper::domainToResponse)
+                        .toList()
+        );
     }
 
     @GetMapping("/{id}")

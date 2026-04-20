@@ -1,9 +1,10 @@
-package com.terranova.api.v1.product.infrastructure.adapter.in.web.dto.response;
+package com.terranova.api.v1.product.infrastructure.adapter.in.web.dto.response.create;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.terranova.api.v1.product.domain.model.enums.ProductTypeEnum;
 import com.terranova.api.v1.product.domain.model.enums.StatusEnum;
+import com.terranova.api.v1.product.infrastructure.adapter.in.web.dto.response.ImageResponse;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

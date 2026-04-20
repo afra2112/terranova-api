@@ -8,22 +8,16 @@ import com.terranova.api.v1.product.domain.model.command.create.CreateCattleComm
 import com.terranova.api.v1.product.domain.model.command.create.CreateFarmCommand;
 import com.terranova.api.v1.product.domain.model.command.create.CreateLandCommand;
 import com.terranova.api.v1.product.domain.model.command.create.CreateProductCommand;
-import com.terranova.api.v1.product.domain.model.command.search.SearchCattleCommand;
-import com.terranova.api.v1.product.domain.model.command.search.SearchFarmCommand;
-import com.terranova.api.v1.product.domain.model.command.search.SearchLandCommand;
 import com.terranova.api.v1.product.domain.model.command.search.SearchProductCommand;
 import com.terranova.api.v1.product.infrastructure.adapter.in.web.dto.request.create.CreateCattleRequest;
 import com.terranova.api.v1.product.infrastructure.adapter.in.web.dto.request.create.CreateFarmRequest;
 import com.terranova.api.v1.product.infrastructure.adapter.in.web.dto.request.create.CreateLandRequest;
 import com.terranova.api.v1.product.infrastructure.adapter.in.web.dto.request.create.CreateProductRequest;
-import com.terranova.api.v1.product.infrastructure.adapter.in.web.dto.request.search.SearchCattleRequest;
-import com.terranova.api.v1.product.infrastructure.adapter.in.web.dto.request.search.SearchFarmRequest;
-import com.terranova.api.v1.product.infrastructure.adapter.in.web.dto.request.search.SearchLandRequest;
 import com.terranova.api.v1.product.infrastructure.adapter.in.web.dto.request.search.SearchProductRequest;
-import com.terranova.api.v1.product.infrastructure.adapter.in.web.dto.response.CreateCattleResponse;
-import com.terranova.api.v1.product.infrastructure.adapter.in.web.dto.response.CreateFarmResponse;
-import com.terranova.api.v1.product.infrastructure.adapter.in.web.dto.response.CreateLandResponse;
-import com.terranova.api.v1.product.infrastructure.adapter.in.web.dto.response.CreateProductResponse;
+import com.terranova.api.v1.product.infrastructure.adapter.in.web.dto.response.create.CreateCattleResponse;
+import com.terranova.api.v1.product.infrastructure.adapter.in.web.dto.response.create.CreateFarmResponse;
+import com.terranova.api.v1.product.infrastructure.adapter.in.web.dto.response.create.CreateLandResponse;
+import com.terranova.api.v1.product.infrastructure.adapter.in.web.dto.response.create.CreateProductResponse;
 import com.terranova.api.v1.product.infrastructure.adapter.out.persistence.entity.CattleEntity;
 import com.terranova.api.v1.product.infrastructure.adapter.out.persistence.entity.FarmEntity;
 import com.terranova.api.v1.product.infrastructure.adapter.out.persistence.entity.LandEntity;
@@ -35,18 +29,7 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring", uses = ImageMapper.class)
 public interface ProductMapper {
 
-        default SearchProductCommand requestToCommand(SearchProductRequest request) {
-            if (request == null) return null;
-            return switch (request) {
-                case SearchFarmRequest f -> searchFarmRequestToFarmCommand(f);
-                case SearchLandRequest l -> searchLandRequestToLandCommand(l);
-                case SearchCattleRequest c -> searchCattleRequestToCattleCommand(c);
-                default -> throw new BusinessException(ErrorCodeEnum.PRODUCT_TYPE_NOT_SUPPORTED, "Product type: " + request);
-            };
-        }
-        SearchFarmCommand searchFarmRequestToFarmCommand(SearchFarmRequest searchFarmRequest);
-        SearchLandCommand searchLandRequestToLandCommand(SearchLandRequest searchLandRequest);
-        SearchCattleCommand searchCattleRequestToCattleCommand(SearchCattleRequest searchCattleRequest);
+        SearchProductCommand searchRequestToCommand(SearchProductRequest request);
 
         default CreateProductCommand requestToCommand(CreateProductRequest request) {
                 if (request == null) return null;
