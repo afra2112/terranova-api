@@ -61,7 +61,6 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('SELLER')")
     public ResponseEntity<CreateProductResponse> getProductById(@Valid @NotNull @Positive @PathVariable Long id){
         return ResponseEntity.ok(productMapper.domainToResponse(getProductUseCase.getProduct(id)));
     }

@@ -38,7 +38,7 @@ public class ProductConfiguration {
     }
 
     @Bean
-    public SearchProductsUseCase searchProductsUseCase(ProductRepositoryPort productRepositoryPort){
-        return new SearchProductsUseCase(productRepositoryPort);
+    public SearchProductsUseCase searchProductsUseCase(ProductRepositoryPort productRepositoryPort, ImageRepositoryPort imageRepositoryPort){
+        return new SearchProductsUseCase(productRepositoryPort, imageRepositoryPort);
     }
 }

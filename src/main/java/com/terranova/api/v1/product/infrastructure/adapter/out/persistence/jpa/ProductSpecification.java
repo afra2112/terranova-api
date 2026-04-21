@@ -30,8 +30,8 @@ public class ProductSpecification {
 
     public static void applyGeneralFilters(SearchProductCommand f, Root<ProductEntity> root, CriteriaBuilder cb, List<Predicate> p){
 
-        if (f.sellerId() != null){
-            p.add(cb.notEqual(root.get("sellerId"), f.sellerId()));
+        if (f.userId() != null){
+            p.add(cb.notEqual(root.get("sellerId"), f.userId()));
         }
 
         if (f.name() != null){

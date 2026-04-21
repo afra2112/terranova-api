@@ -3,6 +3,7 @@ package com.terranova.api.v1.product.infrastructure.adapter.out.persistence.jpa;
 import com.terranova.api.v1.product.domain.model.Product;
 import com.terranova.api.v1.product.domain.model.command.search.SearchProductCommand;
 import com.terranova.api.v1.product.domain.port.out.ProductRepositoryPort;
+import com.terranova.api.v1.product.infrastructure.adapter.mapper.ImageMapper;
 import com.terranova.api.v1.product.infrastructure.adapter.mapper.ProductMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;

@@ -9,7 +9,7 @@ import java.util.UUID;
 public record SearchProductCommand (
 
         //GENERAL
-        UUID sellerId,
+        UUID userId,
         String name,
         BigDecimal minPrice,
         BigDecimal maxPrice,

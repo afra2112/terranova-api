@@ -10,7 +10,7 @@ import java.util.UUID;
 
 public record SearchProductRequest(
         //GENERAL
-        UUID sellerId,
+        UUID userId,
         String name,
         @Positive
         BigDecimal minPrice,
