@@ -51,6 +51,14 @@ Content-Type: application/json
 }
 ###
 
+GET http://localhost:8080/api/v1/products/search
+Content-Type: application/json
+
+{
+
+}
+###
+
 GET http://localhost:8080/api/v1/seller/
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJyb2xlcyI6WyJST0xFX0JVWUVSIiwiUk9MRV9TRUxMRVIiXSwic3ViIjoiMTA5NDI0Nzc0NSIsImlhdCI6MTc3NjYzMTMyMCwiZXhwIjoxNzc2NjMxMzUwfQ.8IN4-eQfEMBjie7_xNQEMhbZ5uCRSCCWrJ5Bp3JIL2WZt3w5yF7cnR8BQZwoeIOdDVVBXf82804BTHqoFXyhAQ
 Content-Type: application/json

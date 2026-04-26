@@ -5,6 +5,7 @@ import com.terranova.api.v1.product.application.usecase.CreateProductUseCase;
 import com.terranova.api.v1.product.application.usecase.GetProductUseCase;
 import com.terranova.api.v1.product.application.usecase.SearchProductsUseCase;
 import com.terranova.api.v1.product.domain.factory.ProductFactory;
+import com.terranova.api.v1.product.domain.port.out.AppointmentPort;
 import com.terranova.api.v1.product.domain.port.out.ImageRepositoryPort;
 import com.terranova.api.v1.product.domain.port.out.ImageStoragePort;
 import com.terranova.api.v1.product.domain.port.out.ProductRepositoryPort;
@@ -38,7 +39,7 @@ public class ProductConfiguration {
     }
 
     @Bean
-    public SearchProductsUseCase searchProductsUseCase(ProductRepositoryPort productRepositoryPort, ImageRepositoryPort imageRepositoryPort){
-        return new SearchProductsUseCase(productRepositoryPort, imageRepositoryPort);
+    public SearchProductsUseCase searchProductsUseCase(ProductRepositoryPort productRepositoryPort, ImageRepositoryPort imageRepositoryPort, AppointmentPort appointmentPort){
+        return new SearchProductsUseCase(productRepositoryPort, imageRepositoryPort, appointmentPort);
     }
 }

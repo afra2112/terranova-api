@@ -1,5 +1,6 @@
 package com.terranova.api.v1.product.domain.model;
 
+import com.terranova.api.v1.product.domain.model.appointment.Appointment;
 import com.terranova.api.v1.product.domain.model.enums.ProductTypeEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -28,6 +29,8 @@ public abstract class Product {
     private UUID sellerId;
     private ProductTypeEnum productType;
     private List<Image> images;
+    private List<Appointment> appointments;
 
     public abstract Product withImages(List<Image> images);
+    public abstract Product withAppointments(List<Appointment> appointments);
 }

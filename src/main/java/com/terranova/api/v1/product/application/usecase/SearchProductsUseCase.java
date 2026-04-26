@@ -28,9 +28,12 @@ public class SearchProductsUseCase {
                 .toList();
 
         if ("appointments".equals(expand)){
-
+            products = products.stream()
+                    .map(product -> product.withAppointments(
+                            appointmentPort.getByProductId(product.getProductId()))
+                    ).toList();
         }
 
-        return ;
+        return products;
     }
 }

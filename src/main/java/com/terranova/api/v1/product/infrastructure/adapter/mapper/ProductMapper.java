@@ -25,6 +25,7 @@ import com.terranova.api.v1.product.infrastructure.adapter.out.persistence.entit
 import com.terranova.api.v1.shared.enums.ErrorCodeEnum;
 import com.terranova.api.v1.shared.exception.BusinessException;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring", uses = ImageMapper.class)
 public interface ProductMapper {
@@ -79,7 +80,10 @@ public interface ProductMapper {
                         default -> throw new BusinessException(ErrorCodeEnum.PRODUCT_TYPE_NOT_SUPPORTED, "Product type: " + product);
                 };
         }
+        @Mapping(target = "productId", source = "productId")
         CreateFarmResponse farmDomainToResponse(Farm farm);
+        @Mapping(target = "productId", source = "productId")
         CreateLandResponse landDomainToResponse(Land land);
+        @Mapping(target = "productId", source = "productId")
         CreateCattleResponse cattleDomainToResponse(Cattle cattle);
 }
