@@ -8,6 +8,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,11 +26,17 @@ public class AppointmentController {
         return mapperOut.domainToResponse(createAppointmentUseCase.createAppointment(mapperIn.requestToCommand(request)));
     }
 
-    @GetMapping("/product/{id}")
-    public List<AppointmentResponse> getAllAppointmentsByProduct(@PathVariable Long id){
-        return getAppointmentsByProductUseCase.getAppointmentsByProduct(id)
+    @GetMapping("/products/{ids}")
+    public Map<Long, List<AppointmentResponse>> getAllAppointmentsByProduct(@PathVariable List<Long> ids){
+        return getAppointmentsByProductUseCase.getAppointmentsByProducts(ids)
+                .entrySet()
                 .stream()
-                .map(mapperOut::domainToResponse)
-                .toList();
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        entry -> entry.getValue()
+                                .stream()
+                                .map(mapperOut::domainToResponse)
+                                .toList()
+                ));
     }
 }

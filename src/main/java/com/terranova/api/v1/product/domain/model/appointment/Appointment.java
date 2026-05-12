@@ -4,7 +4,6 @@ import com.terranova.api.v1.appointment.domain.model.Attendance;
 import com.terranova.api.v1.appointment.domain.model.enums.AppointmentStatusEnum;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -20,10 +19,6 @@ public record Appointment(
         LocalTime startTime,
         LocalTime endTime,
         String description,
-        Long productId,
-        LocalDateTime latestReprogramming,
-        LocalDateTime latestBlockedReprogramming,
-        LocalDateTime newAvailableReprogrammingDate,
-        Integer reprogrammingAttempts
+        Long productId
 ) {
 }

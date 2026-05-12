@@ -4,6 +4,7 @@ import com.terranova.api.v1.appointment.domain.model.Appointment;
 import com.terranova.api.v1.appointment.domain.port.out.AppointmentRepositoryPort;
 
 import java.util.List;
+import java.util.Map;
 
 public class GetAppointmentsByProductUseCase {
 
@@ -13,7 +14,7 @@ public class GetAppointmentsByProductUseCase {
         this.appointmentRepositoryPort = appointmentRepositoryPort;
     }
 
-    public List<Appointment> getAppointmentsByProduct(Long productId){
-        return appointmentRepositoryPort.getByProductId(productId);
+    public Map<Long, List<Appointment>> getAppointmentsByProducts(List<Long> productsIds){
+        return appointmentRepositoryPort.getByProductsIds(productsIds);
     }
 }

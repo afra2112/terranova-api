@@ -3,7 +3,6 @@ package com.terranova.api.v1.product.infrastructure.adapter.in.web.controller;
 import com.terranova.api.v1.product.application.usecase.CreateImageUseCase;
 import com.terranova.api.v1.product.application.usecase.CreateProductUseCase;
 import com.terranova.api.v1.product.application.usecase.GetProductUseCase;
-import com.terranova.api.v1.product.application.usecase.SearchProductsUseCase;
 import com.terranova.api.v1.product.domain.model.command.create.CreateImageCommand;
 import com.terranova.api.v1.product.domain.model.group.CattleGroup;
 import com.terranova.api.v1.product.domain.model.group.FarmGroup;
@@ -18,8 +17,6 @@ import com.terranova.api.v1.product.infrastructure.adapter.mapper.ProductMapper;
 import com.terranova.api.v1.shared.enums.ErrorCodeEnum;
 import com.terranova.api.v1.shared.exception.BusinessException;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -38,7 +35,6 @@ public class ProductController {
     private final CreateImageUseCase createImageUseCase;
     private final CreateProductUseCase createProductUseCase;
     private final GetProductUseCase getProductUseCase;
-    private final SearchProductsUseCase searchProductsUseCase;
     private final ProductMapper productMapper;
     private final ImageMapper imageMapper;
     private final ValidatorPort validatorPort;
@@ -53,7 +49,7 @@ public class ProductController {
     @GetMapping("/search")
     public ResponseEntity<List<CreateProductResponse>> searchProducts(@RequestBody SearchProductRequest request, @RequestParam(required = false) String expand){
         return ResponseEntity.ok().body(
-                searchProductsUseCase.searchProducts(productMapper.searchRequestToCommand(request), expand)
+                getProductUseCase.searchProducts(productMapper.searchRequestToCommand(request), expand)
                         .stream()
                         .map(productMapper::domainToResponse)
                         .toList()
@@ -61,8 +57,8 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CreateProductResponse> getProductById(@Valid @PathVariable Long id){
-        return ResponseEntity.ok(productMapper.domainToResponse(getProductUseCase.getProduct(id)));
+    public ResponseEntity<CreateProductResponse> getProductById(@Valid @PathVariable Long id, @RequestParam(required = false) String expand){
+        return ResponseEntity.ok(productMapper.domainToResponse(getProductUseCase.getProduct(id, expand)));
     }
 
     @PostMapping(value = "/{id}/images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

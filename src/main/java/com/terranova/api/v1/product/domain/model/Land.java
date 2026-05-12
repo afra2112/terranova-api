@@ -64,6 +64,7 @@ public class Land extends Product{
                 .access(this.access)
                 .currentServices(this.currentServices)
                 .appointments(List.copyOf(appointments))
+                .images(this.getImages())
                 .build();
     }
 }

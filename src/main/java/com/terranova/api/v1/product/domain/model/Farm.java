@@ -62,6 +62,7 @@ public class Farm extends Product {
                 .roomsQuantity(this.roomsQuantity)
                 .bathroomsQuantity(this.bathroomsQuantity)
                 .appointments(List.copyOf(appointments))
+                .images(this.getImages())
                 .build();
     }
 }

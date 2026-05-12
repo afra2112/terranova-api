@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -21,10 +23,10 @@ public class AppointmentRepositoryAdapter implements AppointmentRepositoryPort {
     }
 
     @Override
-    public List<Appointment> getByProductId(Long productId) {
-        return appointmentJpaRepository.getByProductId(productId)
+    public Map<Long, List<Appointment>> getByProductsIds(List<Long> productsIds) {
+        return appointmentJpaRepository.getByProductsIds(productsIds)
                 .stream()
                 .map(mapperPersistence::entityToDomain)
-                .toList();
+                .collect(Collectors.groupingBy(Appointment::productId));
     }
 }
