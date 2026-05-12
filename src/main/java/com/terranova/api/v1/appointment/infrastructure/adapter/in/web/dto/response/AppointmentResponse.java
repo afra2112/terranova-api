@@ -5,7 +5,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
-public record CreateAppointmentResponse(
+public record AppointmentResponse(
         Long appointmentId,
         AppointmentStatusEnum status,
         Integer maximumQuorum,

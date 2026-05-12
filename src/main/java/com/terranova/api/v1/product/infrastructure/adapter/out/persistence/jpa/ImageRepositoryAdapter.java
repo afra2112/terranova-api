@@ -11,6 +11,8 @@ import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -39,7 +41,10 @@ public class ImageRepositoryAdapter implements ImageRepositoryPort {
     }
 
     @Override
-    public List<Image> getByProductId(Long productId) {
-        return jpaImageRepository.findByProduct_ProductId(productId).stream().map(imageMapper::entityToDomain).toList();
+    public Map<Long, List<Image>> getByProductId(List<Long> productsIds) {
+        return jpaImageRepository.findByProductsIds(productsIds)
+                .stream()
+                .map(imageMapper::entityToDomain)
+                .collect(Collectors.groupingBy(Image::productId));
     }
 }

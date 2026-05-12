@@ -21,9 +21,14 @@ public class CreateAppointmentUseCase {
     }
 
     public Appointment createAppointment(CreateAppointmentCommand command){
+        if (command.endTime().isBefore(command.startTime())){
+            throw new BusinessException(ErrorCodeEnum.INVALID_TIME);
+        }
+
         if (productServicePort.getProductById(command.productId()).isEmpty()){
             throw new BusinessException(ErrorCodeEnum.ENTITY_NOT_FOUND, "Product not found by id: " + command.productId());
         }
+
         return appointmentRepositoryPort.save(mapperIn.commandToDomain(command));
     }
 }

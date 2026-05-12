@@ -27,6 +27,9 @@ public enum ErrorCodeEnum {
     CLOUDINARY_ERROR("PRD-003", HttpStatus.INTERNAL_SERVER_ERROR, "Cloudinary error."),
     IMAGE_READ_ERROR("PRD-004", HttpStatus.INTERNAL_SERVER_ERROR, "Error with IO reading the file from the request."),
 
+    //APPOINTMENT
+    INVALID_TIME("APMT-001", HttpStatus.BAD_REQUEST, "End time cannot be before start time in your appointment"),
+
     //GENERIC
     VALIDATION_ERROR("GEN-001", HttpStatus.BAD_REQUEST, "Validation error"),
     INTERNAL_ERROR("GEN-002", HttpStatus.INTERNAL_SERVER_ERROR, "Internal server error"),

@@ -9,6 +9,7 @@ import java.time.LocalTime;
 
 public record CreateAppointmentRequest(
         @NotNull
+        @Future
         LocalDate date,
 
         @NotNull

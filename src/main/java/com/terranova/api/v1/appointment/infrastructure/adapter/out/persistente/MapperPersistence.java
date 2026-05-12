@@ -2,9 +2,6 @@ package com.terranova.api.v1.appointment.infrastructure.adapter.out.persistente;
 
 import com.terranova.api.v1.appointment.domain.model.Appointment;
 import com.terranova.api.v1.appointment.domain.model.Attendance;
-import com.terranova.api.v1.appointment.domain.model.command.CreateAppointmentCommand;
-import com.terranova.api.v1.appointment.infrastructure.adapter.in.web.dto.request.CreateAppointmentRequest;
-import com.terranova.api.v1.appointment.infrastructure.adapter.in.web.dto.response.CreateAppointmentResponse;
 import com.terranova.api.v1.appointment.infrastructure.adapter.out.persistente.entity.AppointmentEntity;
 import com.terranova.api.v1.appointment.infrastructure.adapter.out.persistente.entity.AttendanceEntity;
 import org.springframework.stereotype.Component;

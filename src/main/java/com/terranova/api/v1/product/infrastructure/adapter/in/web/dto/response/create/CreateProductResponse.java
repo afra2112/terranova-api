@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.terranova.api.v1.product.domain.model.enums.ProductTypeEnum;
 import com.terranova.api.v1.product.domain.model.enums.StatusEnum;
+import com.terranova.api.v1.product.infrastructure.adapter.in.web.dto.response.AppointmentResponse;
 import com.terranova.api.v1.product.infrastructure.adapter.in.web.dto.response.ImageResponse;
 
 import java.math.BigDecimal;
@@ -23,6 +24,7 @@ import java.util.UUID;
         @JsonSubTypes.Type(value = CreateLandResponse.class, name = "LAND")
 })
 public sealed interface CreateProductResponse permits CreateCattleResponse, CreateFarmResponse, CreateLandResponse {
+    Long productId();
     ProductTypeEnum productType();
     String name();
     BigDecimal price();
@@ -34,4 +36,5 @@ public sealed interface CreateProductResponse permits CreateCattleResponse, Crea
     Double longitude();
     UUID sellerId();
     List<ImageResponse> images();
+    List<AppointmentResponse> appointments();
 }

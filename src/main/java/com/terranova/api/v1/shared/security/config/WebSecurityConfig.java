@@ -58,7 +58,7 @@ public class WebSecurityConfig {
                         .requestMatchers("/api/v1/seller/**").hasAuthority("ROLE_SELLER")
                         .requestMatchers("/api/v1/buyer/**").hasAuthority("ROLE_BUYER")
                         .requestMatchers("/api/v1/auth/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/v1/products", "/api/v1/products/{id}").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/products/search", "/api/v1/products/{id}", "/api/v1/appointments/products/{ids}").permitAll()
                         .anyRequest().authenticated()
                 );
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

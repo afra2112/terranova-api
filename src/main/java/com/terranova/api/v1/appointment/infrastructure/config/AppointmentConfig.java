@@ -1,6 +1,7 @@
 package com.terranova.api.v1.appointment.infrastructure.config;
 
 import com.terranova.api.v1.appointment.application.usecase.CreateAppointmentUseCase;
+import com.terranova.api.v1.appointment.application.usecase.GetAppointmentsByProductUseCase;
 import com.terranova.api.v1.appointment.domain.port.out.AppointmentRepositoryPort;
 import com.terranova.api.v1.appointment.domain.port.out.ProductServicePort;
 import com.terranova.api.v1.appointment.infrastructure.adapter.in.web.MapperIn;
@@ -13,5 +14,10 @@ public class AppointmentConfig {
     @Bean
     public CreateAppointmentUseCase createAppointmentUseCase(AppointmentRepositoryPort appointmentRepositoryPort, MapperIn mapperIn, ProductServicePort productServicePort){
        return new CreateAppointmentUseCase(appointmentRepositoryPort, mapperIn, productServicePort);
+    }
+
+    @Bean
+    public GetAppointmentsByProductUseCase getAppointmentsByProductUseCase(AppointmentRepositoryPort appointmentRepositoryPort){
+        return new GetAppointmentsByProductUseCase(appointmentRepositoryPort);
     }
 }

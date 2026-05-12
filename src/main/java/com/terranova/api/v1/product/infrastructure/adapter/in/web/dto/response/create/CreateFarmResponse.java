@@ -2,6 +2,7 @@ package com.terranova.api.v1.product.infrastructure.adapter.in.web.dto.response.
 
 import com.terranova.api.v1.product.domain.model.enums.ProductTypeEnum;
 import com.terranova.api.v1.product.domain.model.enums.StatusEnum;
+import com.terranova.api.v1.product.infrastructure.adapter.in.web.dto.response.AppointmentResponse;
 import com.terranova.api.v1.product.infrastructure.adapter.in.web.dto.response.ImageResponse;
 import lombok.Builder;
 
@@ -12,6 +13,7 @@ import java.util.UUID;
 
 @Builder
 public record CreateFarmResponse(
+        Long productId,
         ProductTypeEnum productType,
         String name,
         BigDecimal price,
@@ -23,6 +25,7 @@ public record CreateFarmResponse(
         Double longitude,
         UUID sellerId,
         List<ImageResponse> images,
+        List<AppointmentResponse> appointments,
 
         Double totalSpaceInM2,
         Double builtSpaceInM2,

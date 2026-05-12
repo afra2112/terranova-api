@@ -1,15 +1,15 @@
 package com.terranova.api.v1.appointment.infrastructure.adapter.in.web;
 
 import com.terranova.api.v1.appointment.domain.model.Appointment;
+import com.terranova.api.v1.appointment.infrastructure.adapter.in.web.dto.response.AppointmentResponse;
 import com.terranova.api.v1.appointment.infrastructure.adapter.in.web.dto.response.AttendanceResponse;
-import com.terranova.api.v1.appointment.infrastructure.adapter.in.web.dto.response.CreateAppointmentResponse;
 import org.springframework.stereotype.Component;
 
 @Component
 public class MapperOut {
 
-    public CreateAppointmentResponse domainToResponse(Appointment appointment){
-        return new CreateAppointmentResponse(
+    public AppointmentResponse domainToResponse(Appointment appointment){
+        return new AppointmentResponse(
                 appointment.appointmentId(),
                 appointment.status(),
                 appointment.maximumQuorum(),
