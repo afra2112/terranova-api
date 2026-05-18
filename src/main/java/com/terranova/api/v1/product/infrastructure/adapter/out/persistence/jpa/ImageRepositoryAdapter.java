@@ -8,6 +8,7 @@ import com.terranova.api.v1.product.infrastructure.adapter.out.persistence.entit
 import com.terranova.api.v1.product.infrastructure.adapter.out.persistence.entity.ProductEntity;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import java.util.List;
@@ -41,10 +42,24 @@ public class ImageRepositoryAdapter implements ImageRepositoryPort {
     }
 
     @Override
+    public List<Image> getByProductIdAndIdIn(Long productId, List<Long> ids) {
+        return jpaImageRepository.findAllByProduct_ProductIdAndIdImageIn(productId, ids)
+                .stream()
+                .map(imageMapper::entityToDomain)
+                .toList();
+    }
+
+    @Override
     public Map<Long, List<Image>> getByProductId(List<Long> productsIds) {
         return jpaImageRepository.findByProductsIds(productsIds)
                 .stream()
                 .map(imageMapper::entityToDomain)
                 .collect(Collectors.groupingBy(Image::productId));
+    }
+
+    @Transactional
+    @Override
+    public int deleteByProductIdAndIds(Long productId, List<Long> imageIds) {
+        return jpaImageRepository.deleteByProductIdAndIds(productId, imageIds);
     }
 }

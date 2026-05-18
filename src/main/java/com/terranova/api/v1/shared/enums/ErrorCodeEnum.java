@@ -26,6 +26,7 @@ public enum ErrorCodeEnum {
     PRODUCT_TYPE_NOT_SUPPORTED("PRD-002", HttpStatus.BAD_REQUEST, "Product type not supported"),
     CLOUDINARY_ERROR("PRD-003", HttpStatus.INTERNAL_SERVER_ERROR, "Cloudinary error."),
     IMAGE_READ_ERROR("PRD-004", HttpStatus.INTERNAL_SERVER_ERROR, "Error with IO reading the file from the request."),
+    IMAGE_NOT_BELONGS_TO_PRODUCT("PRD-005", HttpStatus.BAD_REQUEST, "This image don't belongs to this product"),
 
     //APPOINTMENT
     INVALID_TIME("APMT-001", HttpStatus.BAD_REQUEST, "End time cannot be before start time in your appointment"),
